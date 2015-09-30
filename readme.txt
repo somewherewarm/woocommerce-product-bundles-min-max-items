@@ -1,7 +1,7 @@
 === WooCommerce Product Bundles - Min/Max Items ===
 
 Contributors: franticpsyx, SomewhereWarm
-Tags: woocommerce, product, bundles, products, tabular, layout, grouped
+Tags: woocommerce, product, bundles, products, min, max, quantity, restrict, validation, limit
 Requires at least: 3.8
 Tested up to: 4.3
 Stable tag: 1.0.0
