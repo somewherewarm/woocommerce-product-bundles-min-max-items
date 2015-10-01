@@ -69,6 +69,9 @@ class WC_PB_Min_Max_Items {
 
 		// Add min/max data to template for use by validation script
 		add_action( 'woocommerce_before_bundled_items', __CLASS__ . '::min_max_script_data' );
+
+		// Cart validation
+		add_action( 'woocommerce_add_to_cart_bundle_validation', __CLASS__ . '::min_max_cart_validation', 10, 3 );
 	}
 
 	/**
@@ -143,9 +146,10 @@ class WC_PB_Min_Max_Items {
 			'i18n_max_qty_error_singular'     => __( 'Please select at most 1 item.', 'woocommerce-product-bundles-min-max-items' ),
 			'i18n_min_max_qty_error_plural'   => __( 'Please select %s items.', 'woocommerce-product-bundles-min-max-items' ),
 			'i18n_min_max_qty_error_singular' => __( 'Please select 1 item.', 'woocommerce-product-bundles-min-max-items' ),
-			'i18n_qty_error_plural'           => __( 'You have selected %s items. %v', 'woocommerce-product-bundles-min-max-items' ),
-			'i18n_qty_error_singular'         => __( 'You have selected %s items. %v', 'woocommerce-product-bundles-min-max-items' ),
-			'i18n_qty_error_none'             => __( 'You have not selected any items. %v', 'woocommerce-product-bundles-min-max-items' ),
+			'i18n_qty_error_plural'           => __( 'You have selected %s items.', 'woocommerce-product-bundles-min-max-items' ),
+			'i18n_qty_error_singular'         => __( 'You have selected 1 item.', 'woocommerce-product-bundles-min-max-items' ),
+			'i18n_qty_error_none'             => __( 'You have not selected any items.', 'woocommerce-product-bundles-min-max-items' ),
+			'i18n_qty_error'                  => __( '%1$s %2$s', 'validation error: status, resolution', 'woocommerce-product-bundles-min-max-items' ),
 		);
 
 		wp_localize_script( 'wcpb-min-max-items-add-to-cart', 'wcpb_min_max_items_params', $params );
@@ -166,6 +170,98 @@ class WC_PB_Min_Max_Items {
 
 			?><div class="min_max_items" data-min="<?php echo $min > 0 ? esc_attr( absint( $min ) ) : ''; ?>" data-max="<?php echo $max > 0 ? esc_attr( absint( $max ) ) : ''; ?>"></div><?php
 		}
+	}
+
+	/**
+	 * Cart validation.
+	 */
+
+	public static function min_max_cart_validation( $result, $bundle_id, $stock_data ) {
+
+		if ( $result ) {
+
+			$items_qty = 0;
+
+			$min_meta  = get_post_meta( $bundle_id, '_wcpb_min_qty_limit', true );
+			$max_meta  = get_post_meta( $bundle_id, '_wcpb_max_qty_limit', true );
+
+			$items_min = $min_meta > 0 ? absint( $min_meta ) : '';
+			$items_max = $max_meta > 0 ? absint( $max_meta ) : '';
+
+			$items     = $stock_data->get_items();
+
+			foreach ( $items as $item ) {
+				$items_qty += $item->quantity;
+			}
+
+			$resolution = '';
+
+			if ( $items_min !== '' && $items_qty < $items_min ) {
+
+				$result = false;
+
+				if ( $items_min === 1 ) {
+
+					if ( $items_min === $items_max ) {
+						$resolution = __( 'you must select 1 item.', 'woocommerce-product-bundles-min-max-items' );
+					} else {
+						$resolution = __( 'you must select at least 1 item.', 'woocommerce-product-bundles-min-max-items' );
+					}
+
+				} else {
+
+					if ( $items_min === $items_max ) {
+						$resolution = __( 'you must select %s items.', 'woocommerce-product-bundles-min-max-items' );
+					} else {
+						$resolution = __( 'you must select at least %s items.', 'woocommerce-product-bundles-min-max-items' );
+					}
+
+					$resolution = sprintf( $resolution, $items_min );
+				}
+
+			} else if ( $items_max !== '' && total_qty > parseInt( $items_max ) ) {
+
+				$result = false;
+
+				if ( $items_max === 1 ) {
+
+					if ( $items_min === $items_max ) {
+						$resolution = __( 'you must select 1 item.', 'woocommerce-product-bundles-min-max-items' );
+					} else {
+						$resolution = __( 'you must select at most 1 item.', 'woocommerce-product-bundles-min-max-items' );
+					}
+
+				} else {
+
+					if ( $items_min === $items_max ) {
+						$resolution = __( 'you must select %s items.', 'woocommerce-product-bundles-min-max-items' );
+					} else {
+						$resolution = __( 'you must select at most %s items.', 'woocommerce-product-bundles-min-max-items' );
+					}
+
+					$resolution = sprintf( $resolution, $items_max );
+				}
+			}
+
+			if ( ! $result ) {
+
+				$action = sprintf( __( 'To purchase &quot;%s&quot;', 'woocommerce-product-bundles-min-max-items' ), get_the_title( $bundle_id ) );
+
+				if ( $items_qty === 0 ) {
+					$status = __( 'You have not selected any items.', 'woocommerce-product-bundles-min-max-items' );
+				} elseif ( $items_qty === 1 ) {
+					$status = __( 'You have selected 1 item.', 'woocommerce-product-bundles-min-max-items' );
+				} else {
+					$status = sprintf( __( 'You have selected %s items.', 'woocommerce-product-bundles-min-max-items' ), $items_qty );
+				}
+
+				$error = sprintf( __( '%1$s %2$s %3$s', 'validation error: action, resulution, status', 'woocommerce-product-bundles-min-max-items' ), $action, $resolution, $status );
+
+				wc_add_notice( $error, 'error' );
+			}
+		}
+
+		return $result;
 	}
 }
 

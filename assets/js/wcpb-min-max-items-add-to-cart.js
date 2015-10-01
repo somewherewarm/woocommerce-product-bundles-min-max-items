@@ -34,17 +34,6 @@
 								}
 							} );
 
-							// initialize the right status message
-							if ( total_qty === 0 ) {
-								qty_error_status = wcpb_min_max_items_params.i18n_qty_error_none;
-							} else if ( total_qty === 1 ) {
-								qty_error_status = wcpb_min_max_items_params.i18n_qty_error_singular;
-							} else {
-								qty_error_status = wcpb_min_max_items_params.i18n_qty_error_plural;
-							}
-
-							qty_error_status = qty_error_status.replace( '%s', total_qty );
-
 							// validate
 							if ( min_max_validation.min !== '' && total_qty < parseInt( min_max_validation.min ) ) {
 
@@ -95,7 +84,18 @@
 
 							// add notice
 							if ( ! passed_validation ) {
-								bundle.add_validation_message( qty_error_status.replace( '%v', qty_error_prompt ) );
+
+								if ( total_qty === 0 ) {
+									qty_error_status = '';
+								} else if ( total_qty === 1 ) {
+									qty_error_status = wcpb_min_max_items_params.i18n_qty_error_singular;
+								} else {
+									qty_error_status = wcpb_min_max_items_params.i18n_qty_error_plural;
+								}
+
+								qty_error_status = qty_error_status.replace( '%s', total_qty );
+
+								bundle.add_validation_message( wcpb_min_max_items_params.i18n_qty_error.replace( '%1$s', qty_error_status ).replace( '%2$s', qty_error_prompt ) );
 							}
 
 						} );
