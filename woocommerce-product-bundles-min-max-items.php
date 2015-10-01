@@ -69,6 +69,7 @@ class WC_PB_Min_Max_Items {
 
 		// Add min/max data to template for use by validation script
 		add_action( 'woocommerce_before_bundled_items', __CLASS__ . '::min_max_script_data' );
+		add_action( 'woocommerce_before_composited_bundled_items', __CLASS__ . '::min_max_script_data' );
 
 		// Cart validation
 		add_action( 'woocommerce_add_to_cart_bundle_validation', __CLASS__ . '::min_max_cart_validation', 10, 3 );
@@ -168,8 +169,8 @@ class WC_PB_Min_Max_Items {
 
 		if ( is_object( $the_product ) && $the_product->product_type === 'bundle' ) {
 
-			$min = get_post_meta( $product->id, '_wcpb_min_qty_limit', true );
-			$max = get_post_meta( $product->id, '_wcpb_max_qty_limit', true );
+			$min = get_post_meta( $the_product->id, '_wcpb_min_qty_limit', true );
+			$max = get_post_meta( $the_product->id, '_wcpb_max_qty_limit', true );
 
 			?><div class="min_max_items" data-min="<?php echo $min > 0 ? esc_attr( absint( $min ) ) : ''; ?>" data-max="<?php echo $max > 0 ? esc_attr( absint( $max ) ) : ''; ?>"></div><?php
 		}
