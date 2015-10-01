@@ -72,6 +72,9 @@ class WC_PB_Min_Max_Items {
 
 		// Cart validation
 		add_action( 'woocommerce_add_to_cart_bundle_validation', __CLASS__ . '::min_max_cart_validation', 10, 3 );
+
+		// Empty bundle price in PPP mode
+		add_action( 'woocommerce_get_bundle_price_html', __CLASS__ . '::min_max_bundle_price', 10, 2 );
 	}
 
 	/**
@@ -262,6 +265,23 @@ class WC_PB_Min_Max_Items {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Empty bundle price in PPP mode.
+	 */
+	public static function min_max_bundle_price( $price, $bundle ) {
+
+		if ( $bundle->is_priced_per_product() ) {
+
+			$min_meta = get_post_meta( $bundle->id, '_wcpb_min_qty_limit', true );
+
+			if ( $min_meta ) {
+				$price = apply_filters( 'woocommerce_bundle_empty_price_html', '', $bundle );
+			}
+		}
+
+		return $price;
 	}
 }
 
