@@ -223,7 +223,7 @@ class WC_PB_Min_Max_Items {
 					$resolution = sprintf( $resolution, $items_min );
 				}
 
-			} else if ( $items_max !== '' && total_qty > parseInt( $items_max ) ) {
+			} else if ( $items_max !== '' && $items_qty > $items_max ) {
 
 				$result = false;
 
