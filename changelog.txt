@@ -1,0 +1,7 @@
+*** WooCommerce Product Bundles - Min/Max Items ***
+
+2015.10.28 - version 1.0.1
+ * Fix: Accurate 'from:' price calculation based on the defined qty constraints.
+
+2015.09.30 - version 1.0.0
+ * Initial Release.

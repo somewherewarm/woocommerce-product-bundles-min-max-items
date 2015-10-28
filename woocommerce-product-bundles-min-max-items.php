@@ -3,7 +3,7 @@
 * Plugin Name: WooCommerce Product Bundles - Min/Max Items
 * Plugin URI: http://www.woothemes.com/products/composite-products/
 * Description: WooCommerce Product Bundles plugin that allows you to define min/max bundled item count constraints.
-* Version: 1.0.0
+* Version: 1.0.1
 * Author: SomewhereWarm
 * Author URI: http://somewherewarm.net/
 * Developer: Manos Psychogyiopoulos
@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class WC_PB_Min_Max_Items {
 
-	public static $version        = '1.0.0';
+	public static $version        = '1.0.1';
 	public static $req_pb_version = '4.11.5';
 
 	public static function plugin_url() {
@@ -74,8 +74,8 @@ class WC_PB_Min_Max_Items {
 		// Cart validation
 		add_action( 'woocommerce_add_to_cart_bundle_validation', __CLASS__ . '::min_max_cart_validation', 10, 3 );
 
-		// Empty bundle price in PPP mode
-		add_action( 'woocommerce_get_bundle_price_html', __CLASS__ . '::min_max_bundle_price', 10, 2 );
+		// Change bundled item quantities for min price calculations in PPP mode
+		add_filter( 'woocommerce_bundled_item_required_quantities', __CLASS__ . '::min_max_bundled_item_required_quantities', 10, 2 );
 	}
 
 	/**
@@ -269,20 +269,72 @@ class WC_PB_Min_Max_Items {
 	}
 
 	/**
-	 * Empty bundle price in PPP mode.
+	 * Change bundled item quantities for min price calculations in PPP mode.
 	 */
-	public static function min_max_bundle_price( $price, $bundle ) {
+	public static function min_max_bundled_item_required_quantities( $quantities, $bundle ) {
 
 		if ( $bundle->is_priced_per_product() ) {
 
-			$min_meta = get_post_meta( $bundle->id, '_wcpb_min_qty_limit', true );
+			$min_qty = get_post_meta( $bundle->id, '_wcpb_min_qty_limit', true );
 
-			if ( $min_meta ) {
-				$price = apply_filters( 'woocommerce_bundle_empty_price_html', '', $bundle );
+			if ( $min_qty ) {
+
+				$pricing_data = array();
+
+				if ( ! empty( $bundle->bundled_items ) ) {
+					foreach ( $bundle->bundled_items as $bundled_item ) {
+						$pricing_data[ $bundled_item->item_id ][ 'price' ]         = $bundled_item->get_bundled_item_price();
+						$pricing_data[ $bundled_item->item_id ][ 'regular_price' ] = $bundled_item->get_bundled_item_regular_price();
+					}
+
+					// slots filled so far
+					$filled_slots = 0;
+
+					foreach ( $quantities[ 'min' ] as $item_min_qty ) {
+						$filled_slots += $item_min_qty;
+					}
+
+					if ( $filled_slots < $min_qty ) {
+
+						// sort by cheapest
+						uasort( $pricing_data, array( __CLASS__, 'sort_by_price' ) );
+
+						// fill additional slots
+						foreach ( $pricing_data as $bundled_item_id => $data ) {
+
+							$slots_to_fill = $min_qty - $filled_slots;
+							$items_to_use  = min( $quantities[ 'max' ][ $bundled_item_id ] - $quantities[ 'min' ][ $bundled_item_id ] , $slots_to_fill );
+
+							$filled_slots += $items_to_use;
+
+							$quantities[ 'min' ][ $bundled_item_id ] += $items_to_use;
+
+							if ( $filled_slots >= $min_qty ) {
+								break;
+							}
+						}
+					}
+				}
 			}
 		}
 
-		return $price;
+		return $quantities;
+	}
+
+	/**
+	 * Sort array data by price.
+	 *
+	 * @param  array $a
+	 * @param  array $b
+	 * @return -1|0|1
+	 */
+	private static function sort_by_price( $a, $b ) {
+
+		if ( $a[ 'price' ] == $b[ 'price' ] ) {
+			return 0;
+		}
+
+		return ( $a[ 'price' ] < $b[ 'price' ] ) ? -1 : 1;
 	}
 }
 
