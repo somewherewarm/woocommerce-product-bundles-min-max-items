@@ -1,5 +1,8 @@
 *** WooCommerce Product Bundles - Min/Max Items ***
 
+2015.11.03 - version 1.0.2
+ * Tweak: Bundles with min/max constraints require input: 'Add to cart' button text and behaviour changed.
+
 2015.10.28 - version 1.0.1
  * Fix: Accurate 'from:' price calculation based on the defined qty constraints.
 
