@@ -1,4 +1,4 @@
-/* global wcpb_min_max_items_params; */
+/* global wcpb_min_max_items_params */
 
 ;( function ( $, window, document, undefined ) {
 

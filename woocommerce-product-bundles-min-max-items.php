@@ -3,7 +3,7 @@
 * Plugin Name: WooCommerce Product Bundles - Min/Max Items
 * Plugin URI: http://www.woothemes.com/products/composite-products/
 * Description: WooCommerce Product Bundles plugin that allows you to define min/max bundled item count constraints.
-* Version: 1.0.2
+* Version: 1.0.3
 * Author: SomewhereWarm
 * Author URI: http://somewherewarm.net/
 * Developer: Manos Psychogyiopoulos
@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class WC_PB_Min_Max_Items {
 
-	public static $version        = '1.0.2';
+	public static $version        = '1.0.3';
 	public static $req_pb_version = '4.11.5';
 
 	public static function plugin_url() {
@@ -40,14 +40,13 @@ class WC_PB_Min_Max_Items {
 
 	public static function init() {
 
-		// Lights on
+		// Lights on.
 		add_action( 'plugins_loaded', __CLASS__ . '::load_plugin' );
 	}
 
 	/**
 	 * Lights on.
 	 */
-
 	public static function load_plugin() {
 
 		global $woocommerce_bundles;
@@ -57,34 +56,33 @@ class WC_PB_Min_Max_Items {
 			return false;
 		}
 
-		// Display min/max qty settings in "Bundled Products" tab
+		// Display min/max qty settings in "Bundled Products" tab.
 		add_action( 'woocommerce_bundled_products_admin_config', __CLASS__ . '::min_max_count_admin_option' );
 
-		// Save min/max qty settings
+		// Save min/max qty settings.
 		add_action( 'woocommerce_process_product_meta_bundle', __CLASS__ . '::min_max_count_meta' );
 
-		// Validation script
-		add_action( 'woocommerce_bundle_add_to_cart', __CLASS__ . '::scripts' );
-		add_action( 'woocommerce_composite_show_composited_product_bundle', __CLASS__ . '::scripts' );
+		// Validation script.
+		add_action( 'woocommerce_bundle_add_to_cart', __CLASS__ . '::script' );
+		add_action( 'woocommerce_composite_add_to_cart', __CLASS__ . '::script' );
 
-		// Add min/max data to template for use by validation script
+		// Add min/max data to template for use by validation script.
 		add_action( 'woocommerce_before_bundled_items', __CLASS__ . '::min_max_script_data' );
 		add_action( 'woocommerce_before_composited_bundled_items', __CLASS__ . '::min_max_script_data' );
 
-		// Cart validation
+		// Cart validation.
 		add_action( 'woocommerce_add_to_cart_bundle_validation', __CLASS__ . '::min_max_cart_validation', 10, 3 );
 
-		// Change bundled item quantities for min price calculations in PPP mode
+		// Change bundled item quantities for min price calculations in PPP mode.
 		add_filter( 'woocommerce_bundled_item_required_quantities', __CLASS__ . '::min_max_bundled_item_required_quantities', 10, 2 );
 
-		// When min/max qty constraints are present, require input
+		// When min/max qty constraints are present, require input.
 		add_filter( 'woocommerce_bundle_requires_input', __CLASS__ . '::min_max_bundle_requires_input', 10, 2 );
 	}
 
 	/**
 	 * PB version check notice.
 	 */
-
 	public static function pb_admin_notice() {
 	    echo '<div class="error"><p>' . sprintf( __( '&quot;WooCommerce Product Bundles &ndash; Min/Max Items&quot; requires at least Product Bundles version %s in order to function. Please upgrade WooCommerce Product Bundles.', 'woocommerce-product-bundles' ), self::$req_pb_version ) . '</p></div>';
 	}
@@ -92,7 +90,6 @@ class WC_PB_Min_Max_Items {
 	/**
 	 * Admin min/max settings display / save.
 	 */
-
 	public static function min_max_count_admin_option() {
 
 		?><div class="options_group"><?php
@@ -119,26 +116,8 @@ class WC_PB_Min_Max_Items {
 	}
 
 	/**
-	 * Apply tabular template modifications.
-	 */
-
-	public static function scripts( $the_product = false ) {
-
-		global $product;
-
-		if ( ! $the_product ) {
-			$the_product = $product;
-		}
-
-		if ( is_object( $the_product ) && $the_product->product_type === 'bundle' ) {
-			self::script();
-		}
-	}
-
-	/**
 	 * Validation script.
 	 */
-
 	public static function script() {
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
@@ -182,7 +161,6 @@ class WC_PB_Min_Max_Items {
 	/**
 	 * Cart validation.
 	 */
-
 	public static function min_max_cart_validation( $result, $bundle_id, $stock_data ) {
 
 		if ( $result ) {

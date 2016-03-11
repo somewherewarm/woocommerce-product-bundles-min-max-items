@@ -1,5 +1,8 @@
 *** WooCommerce Product Bundles - Min/Max Items ***
 
+2016.03.11 - version 1.0.3
+ * Fix: Composite Products support.
+
 2015.11.03 - version 1.0.2
  * Tweak: Bundles with min/max constraints require input: 'Add to cart' button text and behaviour changed.
 
