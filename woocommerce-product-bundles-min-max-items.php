@@ -3,7 +3,7 @@
 * Plugin Name: WooCommerce Product Bundles - Min/Max Items
 * Plugin URI: http://www.woothemes.com/products/composite-products/
 * Description: WooCommerce Product Bundles plugin that allows you to define min/max bundled item count constraints.
-* Version: 1.0.3
+* Version: 1.0.4
 * Author: SomewhereWarm
 * Author URI: http://somewherewarm.net/
 * Developer: Manos Psychogyiopoulos
@@ -12,8 +12,8 @@
 * Text Domain: woocommerce-product-bundles-min-max-items
 * Domain Path: /languages/
 *
-* Requires at least: 3.8
-* Tested up to: 4.3
+* Requires at least: 4.1
+* Tested up to: 4.5
 *
 * Copyright: © 2009-2015 Manos Psychogyiopoulos.
 * License: GNU General Public License v3.0
@@ -27,8 +27,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class WC_PB_Min_Max_Items {
 
-	public static $version        = '1.0.3';
-	public static $req_pb_version = '4.11.5';
+	public static $version        = '1.0.4';
+	public static $req_pb_version = '4.14.3';
 
 	public static function plugin_url() {
 		return plugins_url( basename( plugin_dir_path(__FILE__) ), basename( __FILE__ ) );
