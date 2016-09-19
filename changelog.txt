@@ -1,5 +1,8 @@
 *** WooCommerce Product Bundles - Min/Max Items ***
 
+2016.09.19 - version 1.0.6
+ * Fix - Product Bundles v5.0 support.
+
 2016.05.31 - version 1.0.5
  * Fix - Load plugin textdomain on init.
 
