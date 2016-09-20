@@ -57,7 +57,7 @@ class WC_PB_Min_Max_Items {
 		}
 
 		// Display min/max qty settings in "Bundled Products" tab.
-		add_action( 'woocommerce_bundled_products_admin_config', __CLASS__ . '::min_max_count_admin_option' );
+		add_action( 'woocommerce_bundled_products_admin_config', __CLASS__ . '::min_max_count_admin_option', 9 );
 
 		// Save min/max qty settings.
 		add_action( 'woocommerce_process_product_meta_bundle', __CLASS__ . '::min_max_count_meta' );
