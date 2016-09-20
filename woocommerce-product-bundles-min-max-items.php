@@ -51,7 +51,7 @@ class WC_PB_Min_Max_Items {
 
 		global $woocommerce_bundles;
 
-		if ( ! empty( $woocommerce_bundles ) && version_compare( $woocommerce_bundles->version, self::$req_pb_version ) < 0 ) {
+		if ( empty( $woocommerce_bundles ) || version_compare( $woocommerce_bundles->version, self::$req_pb_version ) < 0 ) {
 			add_action( 'admin_notices', __CLASS__ . '::pb_admin_notice' );
 			return false;
 		}
@@ -102,7 +102,7 @@ class WC_PB_Min_Max_Items {
 	 * PB version check notice.
 	 */
 	public static function pb_admin_notice() {
-	    echo '<div class="error"><p>' . sprintf( __( '&quot;WooCommerce Product Bundles &ndash; Min/Max Items&quot; requires at least Product Bundles version %s in order to function. Please upgrade WooCommerce Product Bundles.', 'woocommerce-product-bundles' ), self::$req_pb_version ) . '</p></div>';
+	    echo '<div class="error"><p>' . sprintf( __( '<strong>WooCommerce Product Bundles &ndash; Min/Max Items</strong> requires Product Bundles <strong>v%s</strong> or higher.', 'woocommerce-product-bundles' ), self::$req_pb_version ) . '</p></div>';
 	}
 
 	/**
