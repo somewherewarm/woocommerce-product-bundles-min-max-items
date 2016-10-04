@@ -13,7 +13,7 @@
 * Domain Path: /languages/
 *
 * Requires at least: 4.1
-* Tested up to: 4.5
+* Tested up to: 4.6
 *
 * Copyright: © 2009-2015 Manos Psychogyiopoulos.
 * License: GNU General Public License v3.0
@@ -102,7 +102,7 @@ class WC_PB_Min_Max_Items {
 	 * PB version check notice.
 	 */
 	public static function pb_admin_notice() {
-	    echo '<div class="error"><p>' . sprintf( __( '<strong>WooCommerce Product Bundles &ndash; Min/Max Items</strong> requires Product Bundles <strong>v%s</strong> or higher.', 'woocommerce-product-bundles' ), self::$req_pb_version ) . '</p></div>';
+	    echo '<div class="error"><p>' . sprintf( __( '<strong>WooCommerce Product Bundles &ndash; Min/Max Items</strong> requires Product Bundles <strong>v%s</strong> or higher.', 'woocommerce-product-bundles-min-max-items' ), self::$req_pb_version ) . '</p></div>';
 	}
 
 	/**
@@ -111,8 +111,8 @@ class WC_PB_Min_Max_Items {
 	public static function min_max_count_admin_option() {
 
 		?><div class="options_group"><?php
-			woocommerce_wp_text_input( array( 'id' => '_wcpb_min_qty_limit', 'type' => 'number', 'label' => __( 'Min Items', 'woocommerce' ), 'desc_tip' => 'false', 'description' => __( 'Minimum allowed quantity of items in the bundle.', 'woocommerce-product-bundles-min-max-items' ) ) );
-			woocommerce_wp_text_input( array( 'id' => '_wcpb_max_qty_limit', 'type' => 'number', 'label' => __( 'Max Items', 'woocommerce' ), 'desc_tip' => 'false', 'description' => __( 'Maximum allowed quantity of items in the bundle.', 'woocommerce-product-bundles-min-max-items' ) ) );
+			woocommerce_wp_text_input( array( 'id' => '_wcpb_min_qty_limit', 'type' => 'number', 'label' => __( 'Items >=', 'woocommerce-product-bundles-min-max-items' ), 'desc_tip' => 'false', 'description' => __( 'Minimum allowed quantity of items in the bundle.', 'woocommerce-product-bundles-min-max-items' ) ) );
+			woocommerce_wp_text_input( array( 'id' => '_wcpb_max_qty_limit', 'type' => 'number', 'label' => __( 'Items <=', 'woocommerce-product-bundles-min-max-items' ), 'desc_tip' => 'false', 'description' => __( 'Maximum allowed quantity of items in the bundle.', 'woocommerce-product-bundles-min-max-items' ) ) );
 		?></div><?php
 	}
 
