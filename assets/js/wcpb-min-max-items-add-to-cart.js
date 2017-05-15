@@ -1,6 +1,6 @@
 /* global wcpb_min_max_items_params */
 
-;( function ( $, window, document, undefined ) {
+;( function ( $, window, document ) {
 
 	function init_script( bundle ) {
 
