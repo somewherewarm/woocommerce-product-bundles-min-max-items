@@ -3,7 +3,7 @@
 * Plugin Name: WooCommerce Product Bundles - Min/Max Items
 * Plugin URI: http://woocommerce.com/products/product-bundles/
 * Description: WooCommerce Product Bundles plugin that allows you to define min/max bundled item count constraints.
-* Version: 1.1.0
+* Version: 1.1.1
 * Author: SomewhereWarm
 * Author URI: http://somewherewarm.gr/
 *
@@ -11,7 +11,7 @@
 * Domain Path: /languages/
 *
 * Requires at least: 4.1
-* Tested up to: 4.7
+* Tested up to: 4.8
 *
 * Copyright: © 2017 SomewhereWarm SMPC.
 * License: GNU General Public License v3.0
@@ -67,7 +67,7 @@ class WC_PB_Min_Max_Items {
 		add_action( 'woocommerce_before_composited_bundled_items', __CLASS__ . '::min_max_script_data' );
 
 		// Cart validation.
-		add_action( 'woocommerce_add_to_cart_bundle_validation', __CLASS__ . '::min_max_cart_validation', 10, 3 );
+		add_action( 'woocommerce_add_to_cart_bundle_validation', __CLASS__ . '::min_max_cart_validation', 10, 4 );
 
 		// Change bundled item quantities.
 		add_filter( 'woocommerce_bundled_item_optimal_price_quantities', __CLASS__ . '::min_max_bundled_item_optimal_quantities', 10, 2 );
@@ -171,7 +171,7 @@ class WC_PB_Min_Max_Items {
 	/**
 	 * Cart validation.
 	 */
-	public static function min_max_cart_validation( $result, $bundle_id, $stock_data ) {
+	public static function min_max_cart_validation( $result, $bundle_id, $stock_data, $configuration = array() ) {
 
 		if ( $result ) {
 
@@ -186,7 +186,9 @@ class WC_PB_Min_Max_Items {
 			$items     = $stock_data->get_items();
 
 			foreach ( $items as $item ) {
-				$items_qty += $item->quantity;
+				$item_id    = isset( $item->bundled_item ) && $item->bundled_item ? $item->bundled_item->item_id : false;
+				$item_qty   = $item_id && isset( $configuration[ $item_id ] ) && isset( $configuration[ $item_id ][ 'quantity' ] ) ? $configuration[ $item_id ][ 'quantity' ] : $item->quantity;
+				$items_qty += $item_qty;
 			}
 
 			$resolution = '';
