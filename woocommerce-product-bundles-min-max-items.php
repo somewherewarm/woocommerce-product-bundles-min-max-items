@@ -3,7 +3,7 @@
 * Plugin Name: WooCommerce Product Bundles - Min/Max Items
 * Plugin URI: http://woocommerce.com/products/product-bundles/
 * Description: WooCommerce Product Bundles plugin that allows you to define min/max bundled item count constraints.
-* Version: 1.1.1
+* Version: 1.2.0-dev
 * Author: SomewhereWarm
 * Author URI: http://somewherewarm.gr/
 *
@@ -25,8 +25,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class WC_PB_Min_Max_Items {
 
-	public static $version        = '1.1.1';
-	public static $req_pb_version = '5.2.0';
+	public static $version        = '1.2.0-dev';
+	public static $req_pb_version = '5.5';
 
 	public static function plugin_url() {
 		return plugins_url( basename( plugin_dir_path(__FILE__) ), basename( __FILE__ ) );
@@ -53,26 +53,25 @@ class WC_PB_Min_Max_Items {
 		}
 
 		// Display min/max qty settings in "Bundled Products" tab.
-		add_action( 'woocommerce_bundled_products_admin_config', __CLASS__ . '::min_max_count_admin_option', 9 );
+		add_action( 'woocommerce_bundled_products_admin_config', __CLASS__ . '::count_admin_option', 9 );
 
 		// Save min/max qty settings.
-		add_action( 'woocommerce_process_product_meta_bundle', __CLASS__ . '::min_max_count_meta' );
+		add_action( 'woocommerce_process_product_meta_bundle', __CLASS__ . '::count_meta' );
 
 		// Validation script.
 		add_action( 'woocommerce_bundle_add_to_cart', __CLASS__ . '::script' );
 		add_action( 'woocommerce_composite_add_to_cart', __CLASS__ . '::script' );
 
 		// Add min/max data to template for use by validation script.
-		add_action( 'woocommerce_before_bundled_items', __CLASS__ . '::min_max_script_data' );
-		add_action( 'woocommerce_before_composited_bundled_items', __CLASS__ . '::min_max_script_data' );
+		add_action( 'woocommerce_before_bundled_items', __CLASS__ . '::script_data' );
+		add_action( 'woocommerce_before_composited_bundled_items', __CLASS__ . '::script_data' );
 
 		// Cart validation.
-		add_action( 'woocommerce_add_to_cart_bundle_validation', __CLASS__ . '::min_max_cart_validation', 10, 4 );
+		add_action( 'woocommerce_add_to_cart_bundle_validation', __CLASS__ . '::cart_validation', 10, 4 );
 
 		// Change bundled item quantities.
-		add_filter( 'woocommerce_bundled_item_optimal_price_quantities', __CLASS__ . '::min_max_bundled_item_optimal_quantities', 10, 2 );
-		add_filter( 'woocommerce_bundled_item_worst_price_quantities', __CLASS__ . '::min_max_bundled_item_worst_quantities', 10, 2 );
-		add_filter( 'woocommerce_bundled_item_required_quantities', __CLASS__ . '::min_max_bundled_item_required_quantities', 10, 2 );
+		add_filter( 'woocommerce_bundled_item_quantity', __CLASS__ . '::bundled_item_quantity', 10, 3 );
+		add_filter( 'woocommerce_bundled_item_quantity_max', __CLASS__ . '::bundled_item_quantity_max', 10, 3 );
 
 		// When min/max qty constraints are present, require input.
 		add_filter( 'woocommerce_bundle_requires_input', __CLASS__ . '::min_max_bundle_requires_input', 10, 2 );
@@ -100,7 +99,7 @@ class WC_PB_Min_Max_Items {
 	/**
 	 * Admin min/max settings display / save.
 	 */
-	public static function min_max_count_admin_option() {
+	public static function count_admin_option() {
 
 		?><div class="options_group"><?php
 			woocommerce_wp_text_input( array( 'id' => '_wcpb_min_qty_limit', 'type' => 'number', 'label' => __( 'Items >=', 'woocommerce-product-bundles-min-max-items' ), 'desc_tip' => 'false', 'description' => __( 'Minimum allowed quantity of items in the bundle.', 'woocommerce-product-bundles-min-max-items' ) ) );
@@ -108,7 +107,7 @@ class WC_PB_Min_Max_Items {
 		?></div><?php
 	}
 
-	public static function min_max_count_meta( $post_id ) {
+	public static function count_meta( $post_id ) {
 
 		if ( ! empty( $_POST[ '_wcpb_min_qty_limit' ] ) && is_numeric( $_POST[ '_wcpb_min_qty_limit' ] ) ) {
 			$min = stripslashes( $_POST[ '_wcpb_min_qty_limit' ] );
@@ -151,7 +150,7 @@ class WC_PB_Min_Max_Items {
 		wp_localize_script( 'wcpb-min-max-items-add-to-cart', 'wcpb_min_max_items_params', $params );
 	}
 
-	public static function min_max_script_data( $the_product = false ) {
+	public static function script_data( $the_product = false ) {
 
 		global $product;
 
@@ -161,8 +160,8 @@ class WC_PB_Min_Max_Items {
 
 		if ( is_object( $the_product ) && $the_product->is_type( 'bundle' ) ) {
 
-			$min = get_post_meta( WC_PB_Core_Compatibility::get_id( $the_product ), '_wcpb_min_qty_limit', true );
-			$max = get_post_meta( WC_PB_Core_Compatibility::get_id( $the_product ), '_wcpb_max_qty_limit', true );
+			$min = $the_product->get_meta( '_wcpb_min_qty_limit', true );
+			$max = $the_product->get_meta( '_wcpb_max_qty_limit', true );
 
 			?><div class="min_max_items" data-min="<?php echo $min > 0 ? esc_attr( absint( $min ) ) : ''; ?>" data-max="<?php echo $max > 0 ? esc_attr( absint( $max ) ) : ''; ?>"></div><?php
 		}
@@ -171,14 +170,15 @@ class WC_PB_Min_Max_Items {
 	/**
 	 * Cart validation.
 	 */
-	public static function min_max_cart_validation( $result, $bundle_id, $stock_data, $configuration = array() ) {
+	public static function cart_validation( $result, $bundle_id, $stock_data, $configuration = array() ) {
 
 		if ( $result ) {
 
 			$items_qty = 0;
+			$bundle    = wc_get_product( $bundle_id );
 
-			$min_meta  = get_post_meta( $bundle_id, '_wcpb_min_qty_limit', true );
-			$max_meta  = get_post_meta( $bundle_id, '_wcpb_max_qty_limit', true );
+			$min_meta  = $bundle->get_meta( '_wcpb_min_qty_limit', true );
+			$max_meta  = $bundle->get_meta( '_wcpb_max_qty_limit', true );
 
 			$items_min = $min_meta > 0 ? absint( $min_meta ) : '';
 			$items_max = $max_meta > 0 ? absint( $max_meta ) : '';
@@ -262,215 +262,84 @@ class WC_PB_Min_Max_Items {
 	}
 
 	/**
-	 * Set bundled item quantities for price calculations.
+	 * Filter bundled item min quantities used in sync/price context.
 	 */
-	public static function legacy_min_max_bundled_item_required_quantities( $quantities, $bundle ) {
+	public static function bundled_item_quantity( $qty, $bundled_item, $args = array() ) {
 
-		if ( $bundle->contains( 'priced_individually' ) ) {
+		if ( isset( $args[ 'context' ] ) && in_array( $args[ 'context' ], array( 'sync', 'price' ) ) ) {
 
-			$min_qty = get_post_meta( $bundle->get_id(), '_wcpb_min_qty_limit', true );
+			$bundle  = $bundled_item->get_bundle();
+			$min_qty = $bundle ? $bundle->get_meta( '_wcpb_min_qty_limit', true ) : '';
 
 			if ( $min_qty ) {
 
-				$pricing_data  = array();
-				$bundled_items = $bundle->get_bundled_items();
+				if ( 'sync' === $args[ 'context' ] ) {
+					$quantities = self::get_min_required_quantities( $bundle );
+				} elseif ( 'price' === $args[ 'context' ] ) {
+					$quantities = self::get_min_price_quantities( $bundle );
+				}
 
-				if ( ! empty( $bundled_items ) ) {
-					foreach ( $bundled_items as $bundled_item ) {
-						$pricing_data[ $bundled_item->item_id ][ 'price' ] = $bundled_item->get_price();
-					}
-
-					// Slots filled so far.
-					$filled_slots = 0;
-
-					foreach ( $quantities[ 'min' ] as $item_min_qty ) {
-						$filled_slots += $item_min_qty;
-					}
-
-					if ( $filled_slots < $min_qty ) {
-
-						// Sort by cheapest.
-						uasort( $pricing_data, array( __CLASS__, 'sort_by_price' ) );
-
-						// Fill additional slots.
-						foreach ( $pricing_data as $bundled_item_id => $data ) {
-
-							$slots_to_fill = $min_qty - $filled_slots;
-							$items_to_use  = min( $quantities[ 'max' ][ $bundled_item_id ] - $quantities[ 'min' ][ $bundled_item_id ] , $slots_to_fill );
-
-							$filled_slots += $items_to_use;
-
-							$quantities[ 'min' ][ $bundled_item_id ] += $items_to_use;
-
-							if ( $filled_slots >= $min_qty ) {
-								break;
-							}
-						}
-					}
+				if ( isset( $quantities[ $bundled_item->get_id() ] ) ) {
+					$qty = $quantities[ $bundled_item->get_id() ];
 				}
 			}
 		}
 
-		return $quantities;
+		return $qty;
 	}
 
 	/**
-	 * Find the price-optimized set of min bundled item quantities that meet the min item count constraint while honoring the initial min/max item quantity constraints.
-	 * Price-optimized max quantities are not used in any calculations, so we can skip them.
+	 * Filter bundled item max quantities used in sync/price context.
 	 */
-	public static function min_max_bundled_item_optimal_quantities( $quantities, $bundle ) {
+	public static function bundled_item_quantity_max( $qty, $bundled_item, $args = array() ) {
 
-		$min_qty = get_post_meta( $bundle->get_id(), '_wcpb_min_qty_limit', true );
+		if ( isset( $args[ 'context' ] ) && in_array( $args[ 'context' ], array( 'sync', 'price' ) ) ) {
 
-		/*
-		 * Min items count defined: Put the min quantities in the box, then keep adding items giving preference to the cheaper ones, while honoring their max quantity constraints.
-		 */
-		if ( $min_qty ) {
+			$bundle  = $bundled_item->get_bundle();
+			$min_qty = $bundle ? $bundle->get_meta( '_wcpb_min_qty_limit', true ) : '';
 
-			$pricing_data  = array();
-			$bundled_items = $bundle->get_bundled_items();
+			if ( $min_qty ) {
 
-			if ( ! empty( $bundled_items ) ) {
-				foreach ( $bundled_items as $bundled_item ) {
-					$pricing_data[ $bundled_item->item_id ][ 'price' ] = $bundled_item->get_price();
-				}
-			}
-
-			if ( ! empty( $pricing_data ) ) {
-
-				// Slots filled due to item min quantities.
-				$filled_slots = 0;
-
-				foreach ( $quantities[ 'min' ] as $item_min_qty ) {
-					$filled_slots += $item_min_qty;
+				if ( 'price' === $args[ 'context' ] ) {
+					$quantities = self::get_max_price_quantities( $bundle );
 				}
 
-				// Fill in the remaining box slots with cheapest combination of items.
-				if ( $filled_slots < $min_qty ) {
-
-					// Sort by cheapest.
-					uasort( $pricing_data, array( __CLASS__, 'sort_by_price' ) );
-
-					// Fill additional slots.
-					foreach ( $pricing_data as $bundled_item_id => $data ) {
-
-						$slots_to_fill = $min_qty - $filled_slots;
-
-						if ( $filled_slots >= $min_qty ) {
-							break;
-						}
-
-						$bundled_item = $bundled_items[ $bundled_item_id ];
-
-						if ( false === $bundled_item->is_purchasable() ) {
-							continue;
-						}
-
-						$max_items_to_use = $quantities[ 'max' ][ $bundled_item_id ];
-						$min_items_to_use = $quantities[ 'min' ][ $bundled_item_id ];
-
-						$items_to_use = '' !== $max_items_to_use ? min( $max_items_to_use - $min_items_to_use, $slots_to_fill ) : $slots_to_fill;
-
-						$filled_slots += $items_to_use;
-
-						$quantities[ 'min' ][ $bundled_item_id ] += $items_to_use;
-					}
+				if ( isset( $quantities[ $bundled_item->get_id() ] ) ) {
+					$qty = $quantities[ $bundled_item->get_id() ];
 				}
 			}
 		}
 
-		return $quantities;
-	}
-
-	/**
-	 * Find the worst-price set of max bundled item quantities that meet the max item count constraint while honoring the initial min/max item quantity constraints.
-	 * Worst-price min quantities are not used in any calculations, so we can skip them.
-	 */
-	public static function min_max_bundled_item_worst_quantities( $quantities, $bundle ) {
-
-		$max_qty = get_post_meta( $bundle->get_id(), '_wcpb_max_qty_limit', true );
-
-		/*
-		 * Max items count defined: Put the min quantities in the box, then keep adding items giving preference to the most expensive ones, while honoring their max quantity constraints.
-		 */
-		if ( $max_qty ) {
-
-			$pricing_data  = array();
-			$bundled_items = $bundle->get_bundled_items();
-
-			if ( ! empty( $bundled_items ) ) {
-				foreach ( $bundled_items as $bundled_item ) {
-					$pricing_data[ $bundled_item->item_id ][ 'price' ] = $bundled_item->get_price();
-				}
-			}
-
-			if ( ! empty( $pricing_data ) ) {
-
-				// Sort by most expensive.
-				uasort( $pricing_data, array( __CLASS__, 'sort_by_price' ) );
-				$reverse_pricing_data = array_reverse( $pricing_data, true );
-
-				// Slots filled due to item min quantities.
-				$filled_slots = 0;
-
-				foreach ( $quantities[ 'min' ] as $item_min_qty ) {
-					$filled_slots += $item_min_qty;
-				}
-			}
-
-			// Fill in the remaining box slots with most expensive combination of items.
-			if ( $filled_slots < $max_qty ) {
-
-				// Fill additional slots.
-				foreach ( $reverse_pricing_data as $bundled_item_id => $data ) {
-
-					$slots_to_fill = $max_qty - $filled_slots;
-
-
-					if ( $filled_slots >= $max_qty ) {
-						$quantities[ 'max' ][ $bundled_item_id ] = $quantities[ 'min' ][ $bundled_item_id ];
-						continue;
-					}
-
-					$bundled_item = $bundled_items[ $bundled_item_id ];
-
-					if ( false === $bundled_item->is_purchasable() ) {
-						continue;
-					}
-
-					$max_items_to_use = $quantities[ 'max' ][ $bundled_item_id ];
-					$min_items_to_use = $quantities[ 'min' ][ $bundled_item_id ];
-
-					$items_to_use = '' !== $max_items_to_use ? min( $max_items_to_use - $min_items_to_use, $slots_to_fill ) : $slots_to_fill;
-
-					$filled_slots += $items_to_use;
-
-					$quantities[ 'max' ][ $bundled_item_id ] = $quantities[ 'min' ][ $bundled_item_id ] + $items_to_use;
-				}
-			}
-		}
-
-		return $quantities;
+		return $qty;
 	}
 
 	/**
 	 * Find the price-optimized AND availability-constrained set of min bundled item quantities that meet the min item count constraint while honoring the initial min/max item quantity constraints.
 	 * Price-optimized, availability-constrained max quantities are not used in availability calculations, so we can skip them.
 	 */
-	public static function min_max_bundled_item_required_quantities( $quantities, $bundle ) {
+	public static function get_min_required_quantities( $bundle ) {
 
-		$min_qty = get_post_meta( $bundle->get_id(), '_wcpb_min_qty_limit', true );
+		$result = WC_PB_Helpers::cache_get( 'min_required_quantities_' . $bundle->get_id() );
 
-		if ( $min_qty ) {
+		if ( is_null( $result ) ) {
+
+			$quantities = array(
+				'min' => array(),
+				'max' => array()
+			);
 
 			$pricing_data  = array();
 			$bundled_items = $bundle->get_bundled_items();
 
 			if ( ! empty( $bundled_items ) ) {
 
+				$min_qty = $bundle->get_meta( '_wcpb_min_qty_limit', true );
+
 				foreach ( $bundled_items as $bundled_item ) {
-					$pricing_data[ $bundled_item->item_id ][ 'price' ]         = $bundled_item->get_price();
-					$pricing_data[ $bundled_item->item_id ][ 'regular_price' ] = $bundled_item->get_regular_price();
+					$pricing_data[ $bundled_item->get_id() ][ 'price' ]         = $bundled_item->get_price();
+					$pricing_data[ $bundled_item->get_id() ][ 'regular_price' ] = $bundled_item->get_regular_price();
+					$quantities[ 'min' ][ $bundled_item->get_id() ]             = $bundled_item->get_quantity( 'min', array( 'check_optional' => true ) );
+					$quantities[ 'max' ][ $bundled_item->get_id() ]             = $bundled_item->get_quantity( 'max' );
 				}
 
 				// Slots filled so far.
@@ -530,13 +399,175 @@ class WC_PB_Min_Max_Items {
 				// In this case, ignore stock constraints and return the optimal price quantities, forcing the bundle to show up as out of stock.
 
 				if ( $min_qty > $filled_slots ) {
-
-					$quantities[ 'min' ] = $bundle->get_bundled_item_quantities( 'optimal', 'min' );
+					$quantities[ 'min' ] = self::get_min_price_quantities( $bundle );
 				}
 			}
+
+			$result = $quantities[ 'min' ];
+			WC_PB_Helpers::cache_set( 'min_required_quantities_' . $bundle->get_id(), $result );
 		}
 
-		return $quantities;
+		return $result;
+	}
+
+	/**
+	 * Find the price-optimized set of min bundled item quantities that meet the min item count constraint while honoring the initial min/max item quantity constraints.
+	 * Price-optimized max quantities are not used in any calculations, so we can skip them.
+	 */
+	public static function get_min_price_quantities( $bundle ) {
+
+		$result = WC_PB_Helpers::cache_get( 'min_price_quantities_' . $bundle->get_id() );
+
+		if ( is_null( $result ) ) {
+
+			$quantities = array(
+				'min' => array(),
+				'max' => array()
+			);
+
+			$pricing_data  = array();
+			$bundled_items = $bundle->get_bundled_items();
+
+			if ( ! empty( $bundled_items ) ) {
+				foreach ( $bundled_items as $bundled_item ) {
+					$pricing_data[ $bundled_item->get_id() ][ 'price' ] = $bundled_item->get_price();
+					$quantities[ 'min' ][ $bundled_item->get_id() ] = $bundled_item->get_quantity( 'min', array( 'check_optional' => true ) );
+					$quantities[ 'max' ][ $bundled_item->get_id() ] = $bundled_item->get_quantity( 'max' );
+				}
+			}
+
+			if ( ! empty( $pricing_data ) ) {
+
+				$min_qty = $bundle->get_meta( '_wcpb_min_qty_limit', true );
+
+				// Slots filled due to item min quantities.
+				$filled_slots = 0;
+
+				foreach ( $quantities[ 'min' ] as $item_min_qty ) {
+					$filled_slots += $item_min_qty;
+				}
+
+				// Fill in the remaining box slots with cheapest combination of items.
+				if ( $filled_slots < $min_qty ) {
+
+					// Sort by cheapest.
+					uasort( $pricing_data, array( __CLASS__, 'sort_by_price' ) );
+
+					// Fill additional slots.
+					foreach ( $pricing_data as $bundled_item_id => $data ) {
+
+						$slots_to_fill = $min_qty - $filled_slots;
+
+						if ( $filled_slots >= $min_qty ) {
+							break;
+						}
+
+						$bundled_item = $bundled_items[ $bundled_item_id ];
+
+						if ( false === $bundled_item->is_purchasable() ) {
+							continue;
+						}
+
+						$max_items_to_use = $quantities[ 'max' ][ $bundled_item_id ];
+						$min_items_to_use = $quantities[ 'min' ][ $bundled_item_id ];
+
+						$items_to_use = '' !== $max_items_to_use ? min( $max_items_to_use - $min_items_to_use, $slots_to_fill ) : $slots_to_fill;
+
+						$filled_slots += $items_to_use;
+
+						$quantities[ 'min' ][ $bundled_item_id ] += $items_to_use;
+					}
+				}
+			}
+
+			$result = $quantities[ 'min' ];
+			WC_PB_Helpers::cache_set( 'min_price_quantities_' . $bundle->get_id(), $result );
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Find the worst-price set of max bundled item quantities that meet the max item count constraint while honoring the initial min/max item quantity constraints.
+	 * Worst-price min quantities are not used in any calculations, so we can skip them.
+	 */
+	public static function get_max_price_quantities( $bundle ) {
+
+		$result = WC_PB_Helpers::cache_get( 'max_price_quantities_' . $bundle->get_id() );
+
+		/*
+		 * Max items count defined: Put the min quantities in the box, then keep adding items giving preference to the most expensive ones, while honoring their max quantity constraints.
+		 */
+		if ( is_null( $result ) ) {
+
+			$quantities = array(
+				'min' => array(),
+				'max' => array()
+			);
+
+			$pricing_data  = array();
+			$bundled_items = $bundle->get_bundled_items();
+
+			if ( ! empty( $bundled_items ) ) {
+				foreach ( $bundled_items as $bundled_item ) {
+					$pricing_data[ $bundled_item->get_id() ][ 'price' ] = $bundled_item->get_price();
+					$quantities[ 'min' ][ $bundled_item->get_id() ]     = $bundled_item->get_quantity( 'min', array( 'check_optional' => true ) );
+					$quantities[ 'max' ][ $bundled_item->get_id() ]     = $bundled_item->get_quantity( 'max' );
+				}
+			}
+
+			$max_qty = $bundle->get_meta( '_wcpb_max_qty_limit', true );
+
+			if ( ! empty( $pricing_data ) ) {
+
+				// Sort by most expensive.
+				uasort( $pricing_data, array( __CLASS__, 'sort_by_price' ) );
+				$reverse_pricing_data = array_reverse( $pricing_data, true );
+
+				// Slots filled due to item min quantities.
+				$filled_slots = 0;
+
+				foreach ( $quantities[ 'min' ] as $item_min_qty ) {
+					$filled_slots += $item_min_qty;
+				}
+			}
+
+			// Fill in the remaining box slots with most expensive combination of items.
+			if ( $filled_slots < $max_qty ) {
+
+				// Fill additional slots.
+				foreach ( $reverse_pricing_data as $bundled_item_id => $data ) {
+
+					$slots_to_fill = $max_qty - $filled_slots;
+
+
+					if ( $filled_slots >= $max_qty ) {
+						$quantities[ 'max' ][ $bundled_item_id ] = $quantities[ 'min' ][ $bundled_item_id ];
+						continue;
+					}
+
+					$bundled_item = $bundled_items[ $bundled_item_id ];
+
+					if ( false === $bundled_item->is_purchasable() ) {
+						continue;
+					}
+
+					$max_items_to_use = $quantities[ 'max' ][ $bundled_item_id ];
+					$min_items_to_use = $quantities[ 'min' ][ $bundled_item_id ];
+
+					$items_to_use = '' !== $max_items_to_use ? min( $max_items_to_use - $min_items_to_use, $slots_to_fill ) : $slots_to_fill;
+
+					$filled_slots += $items_to_use;
+
+					$quantities[ 'max' ][ $bundled_item_id ] = $quantities[ 'min' ][ $bundled_item_id ] + $items_to_use;
+				}
+			}
+
+			$result = $quantities[ 'max' ];
+			WC_PB_Helpers::cache_set( 'max_price_quantities_' . $bundle->get_id(), $result );
+		}
+
+		return $result;
 	}
 
 	/**
@@ -544,8 +575,8 @@ class WC_PB_Min_Max_Items {
 	 */
 	public static function min_max_bundle_requires_input( $requires_input, $bundle ) {
 
-		$min_qty = get_post_meta( $bundle->get_id(), '_wcpb_min_qty_limit', true );
-		$max_qty = get_post_meta( $bundle->get_id(), '_wcpb_max_qty_limit', true );
+		$min_qty = $bundle->get_meta( '_wcpb_min_qty_limit', true );
+		$max_qty = $bundle->get_meta( '_wcpb_max_qty_limit', true );
 
 		if ( $min_qty || $max_qty ) {
 
