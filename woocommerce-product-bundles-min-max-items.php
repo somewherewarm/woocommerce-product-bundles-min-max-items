@@ -18,7 +18,7 @@
 * License URI: http://www.gnu.org/licenses/gpl-3.0.html
 */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -37,8 +37,6 @@ class WC_PB_Min_Max_Items {
 	}
 
 	public static function init() {
-
-		// Lights on.
 		add_action( 'plugins_loaded', __CLASS__ . '::load_plugin' );
 	}
 
@@ -53,10 +51,10 @@ class WC_PB_Min_Max_Items {
 		}
 
 		// Display min/max qty settings in "Bundled Products" tab.
-		add_action( 'woocommerce_bundled_products_admin_config', __CLASS__ . '::count_admin_option', 9 );
+		add_action( 'woocommerce_bundled_products_admin_config', __CLASS__ . '::display_options', 15 );
 
 		// Save min/max qty settings.
-		add_action( 'woocommerce_process_product_meta_bundle', __CLASS__ . '::count_meta' );
+		add_action( 'woocommerce_admin_process_product_object', array( __CLASS__, 'save_meta' ) );
 
 		// Validation script.
 		add_action( 'woocommerce_bundle_add_to_cart', __CLASS__ . '::script' );
@@ -97,30 +95,47 @@ class WC_PB_Min_Max_Items {
 	}
 
 	/**
-	 * Admin min/max settings display / save.
+	 * Admin min/max settings.
 	 */
-	public static function count_admin_option() {
+	public static function display_options() {
 
 		?><div class="options_group"><?php
-			woocommerce_wp_text_input( array( 'id' => '_wcpb_min_qty_limit', 'type' => 'number', 'label' => __( 'Items >=', 'woocommerce-product-bundles-min-max-items' ), 'desc_tip' => 'false', 'description' => __( 'Minimum allowed quantity of items in the bundle.', 'woocommerce-product-bundles-min-max-items' ) ) );
-			woocommerce_wp_text_input( array( 'id' => '_wcpb_max_qty_limit', 'type' => 'number', 'label' => __( 'Items <=', 'woocommerce-product-bundles-min-max-items' ), 'desc_tip' => 'false', 'description' => __( 'Maximum allowed quantity of items in the bundle.', 'woocommerce-product-bundles-min-max-items' ) ) );
+			woocommerce_wp_text_input( array(
+				'id'            => '_wcpb_min_qty_limit',
+				'wrapper_class' => 'bundled_product_data_field',
+				'type'          => 'number',
+				'label'         => __( 'Quantity Min', 'woocommerce-product-bundles-min-max-items' ),
+				'desc_tip'      => 'false',
+				'description'   => __( 'Minimum required quantity of bundled items.', 'woocommerce-product-bundles-min-max-items' )
+			) );
+			woocommerce_wp_text_input( array(
+				'id'            => '_wcpb_max_qty_limit',
+				'wrapper_class' => 'bundled_product_data_field',
+				'type'          => 'number',
+				'label'         => __( 'Quantity Max', 'woocommerce-product-bundles-min-max-items' ),
+				'desc_tip'      => 'false',
+				'description'   => __( 'Maximum allowed quantity of bundled items.', 'woocommerce-product-bundles-min-max-items' ) ) );
 		?></div><?php
 	}
 
-	public static function count_meta( $post_id ) {
+	/**
+	 * Save meta.
+	 *
+	 * @param  WC_Product  $product
+	 * @return void
+	 */
+	public static function save_meta( $product ) {
 
 		if ( ! empty( $_POST[ '_wcpb_min_qty_limit' ] ) && is_numeric( $_POST[ '_wcpb_min_qty_limit' ] ) ) {
-			$min = stripslashes( $_POST[ '_wcpb_min_qty_limit' ] );
-			update_post_meta( $post_id, '_wcpb_min_qty_limit', $min );
+			$product->add_meta_data( '_wcpb_min_qty_limit', stripslashes( $_POST[ '_wcpb_min_qty_limit' ] ), true );
 		} else {
-			delete_post_meta( $post_id, '_wcpb_min_qty_limit' );
+			$product->delete_meta_data( '_wcpb_min_qty_limit' );
 		}
 
 		if ( ! empty( $_POST[ '_wcpb_max_qty_limit' ] ) && is_numeric( $_POST[ '_wcpb_max_qty_limit' ] ) ) {
-			$max = stripslashes( $_POST[ '_wcpb_max_qty_limit' ] );
-			update_post_meta( $post_id, '_wcpb_max_qty_limit', $max );
+			$product->add_meta_data( '_wcpb_max_qty_limit', stripslashes( $_POST[ '_wcpb_max_qty_limit' ] ), true );
 		} else {
-			delete_post_meta( $post_id, '_wcpb_max_qty_limit' );
+			$product->delete_meta_data( '_wcpb_max_qty_limit' );
 		}
 	}
 
@@ -150,6 +165,12 @@ class WC_PB_Min_Max_Items {
 		wp_localize_script( 'wcpb-min-max-items-add-to-cart', 'wcpb_min_max_items_params', $params );
 	}
 
+	/**
+	 * Pass min/max container values to the single-product script.
+	 *
+	 * @param  WC_Product  $product
+	 * @return void
+	 */
 	public static function script_data( $the_product = false ) {
 
 		global $product;
@@ -169,6 +190,11 @@ class WC_PB_Min_Max_Items {
 
 	/**
 	 * Cart validation.
+	 *
+	 * @param  bool                 $result
+	 * @param  int                  $bundle_id
+	 * @param  WC_PB_Stock_Manager  $stock_data
+	 * @param  array                $configuration
 	 */
 	public static function cart_validation( $result, $bundle_id, $stock_data, $configuration = array() ) {
 
@@ -263,6 +289,11 @@ class WC_PB_Min_Max_Items {
 
 	/**
 	 * Filter bundled item min quantities used in sync/price context.
+	 *
+	 * @param  int              $qty
+	 * @param  WC_Bundled_Item  $bundled_item
+	 * @param  array            $args
+	 * @return int
 	 */
 	public static function bundled_item_quantity( $qty, $bundled_item, $args = array() ) {
 
@@ -290,6 +321,11 @@ class WC_PB_Min_Max_Items {
 
 	/**
 	 * Filter bundled item max quantities used in sync/price context.
+	 *
+	 * @param  int              $qty
+	 * @param  WC_Bundled_Item  $bundled_item
+	 * @param  array            $args
+	 * @return int
 	 */
 	public static function bundled_item_quantity_max( $qty, $bundled_item, $args = array() ) {
 
@@ -314,8 +350,10 @@ class WC_PB_Min_Max_Items {
 	}
 
 	/**
-	 * Find the price-optimized AND availability-constrained set of min bundled item quantities that meet the min item count constraint while honoring the initial min/max item quantity constraints.
-	 * Price-optimized, availability-constrained max quantities are not used in availability calculations, so we can skip them.
+	 * Find the price-optimized AND availability-constrained set of bundled item quantities that meet the min item count constraint while honoring the initial min/max item quantity constraints.
+	 *
+	 * @param  WC_Product  $product
+	 * @return array
 	 */
 	public static function get_min_required_quantities( $bundle ) {
 
@@ -411,8 +449,10 @@ class WC_PB_Min_Max_Items {
 	}
 
 	/**
-	 * Find the price-optimized set of min bundled item quantities that meet the min item count constraint while honoring the initial min/max item quantity constraints.
-	 * Price-optimized max quantities are not used in any calculations, so we can skip them.
+	 * Find the price-optimized set of bundled item quantities that meet the min item count constraint while honoring the initial min/max item quantity constraints.
+	 *
+	 * @param  WC_Product  $product
+	 * @return array
 	 */
 	public static function get_min_price_quantities( $bundle ) {
 
@@ -488,8 +528,10 @@ class WC_PB_Min_Max_Items {
 	}
 
 	/**
-	 * Find the worst-price set of max bundled item quantities that meet the max item count constraint while honoring the initial min/max item quantity constraints.
-	 * Worst-price min quantities are not used in any calculations, so we can skip them.
+	 * Find the worst-price set of bundled item quantities that meet the max item count constraint while honoring the initial min/max item quantity constraints.
+	 *
+	 * @param  WC_Product  $product
+	 * @return array
 	 */
 	public static function get_max_price_quantities( $bundle ) {
 
@@ -572,6 +614,9 @@ class WC_PB_Min_Max_Items {
 
 	/**
 	 * When min/max qty constraints are present, require input.
+	 *
+	 * @param  bool               $requires_input
+	 * @param  WC_Product_Bundle  $bundle
 	 */
 	public static function min_max_bundle_requires_input( $requires_input, $bundle ) {
 
