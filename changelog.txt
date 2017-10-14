@@ -1,5 +1,9 @@
 *** WooCommerce Product Bundles - Min/Max Items ***
 
+2017.10.14 - version 1.2.0
+* Important - Product Bundles v5.5+ required.
+* Fix - Product Bundles v5.5 compatibility.
+
 2017.08.18 - version 1.1.1
 * Fix - Add-to-cart validation failure when bundle quantity > 1.
 
