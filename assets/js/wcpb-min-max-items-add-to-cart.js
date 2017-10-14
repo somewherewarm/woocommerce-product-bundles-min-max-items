@@ -28,7 +28,7 @@
 						// Count items.
 						$.each( bundle.bundled_items, function( index, bundled_item ) {
 							if ( bundled_item.is_selected() ) {
-								total_qty += parseInt( bundled_item.get_quantity() );
+								total_qty += bundled_item.get_quantity();
 							}
 						} );
 
@@ -84,7 +84,23 @@
 						if ( ! passed_validation ) {
 
 							if ( total_qty === 0 ) {
+
 								qty_error_status = '';
+
+								if ( 'no' === bundle.price_data.zero_items_allowed ) {
+
+									var validation_messages         = bundle.get_validation_messages(),
+										cleaned_validation_messages = [];
+
+									for ( var i = 0; i <= validation_messages.length - 1; i++ ) {
+										if ( validation_messages[ i ] !== wc_bundle_params.i18n_zero_qty_error ) {
+											cleaned_validation_messages.push( validation_messages[ i ] );
+										}
+									}
+
+									bundle.validation_messages = cleaned_validation_messages;
+								}
+
 							} else if ( total_qty === 1 ) {
 								qty_error_status = wcpb_min_max_items_params.i18n_qty_error_singular;
 							} else {

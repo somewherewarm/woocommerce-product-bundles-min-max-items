@@ -13,7 +13,30 @@ module.exports = function( grunt ) {
 		// JavaScript linting with JSHint.
 		jshint: {
 			options: {
-				jshintrc: '.jshintrc'
+				'force': true,
+				'boss': true,
+				'curly': true,
+				'eqeqeq': false,
+				'eqnull': true,
+				'es3': false,
+				'expr': false,
+				'immed': true,
+				'noarg': true,
+				'onevar': true,
+				'quotmark': 'single',
+				'trailing': true,
+				'undef': true,
+				'unused': true,
+				'sub': false,
+				'browser': true,
+				'maxerr': 1000,
+				globals: {
+					'jQuery': false,
+					'$': false,
+					'Backbone': false,
+					'_': false,
+					'wc_bundle_params': false
+				},
 			},
 			all: [
 				'Gruntfile.js',
@@ -107,20 +130,25 @@ module.exports = function( grunt ) {
 		}
 	});
 
-	// Load NPM tasks to be used here
+	// Load NPM tasks to be used here.
 	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
 	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
 	grunt.loadNpmTasks( 'grunt-wp-i18n' );
 	grunt.loadNpmTasks( 'grunt-checktextdomain' );
 
-	// Register tasks
-	grunt.registerTask( 'default', [
+	// Register tasks.
+	grunt.registerTask( 'dev', [
+		'checktextdomain',
 		'uglify'
 	]);
 
-	grunt.registerTask( 'dev', [
-		'default',
+	grunt.registerTask( 'default', [
+		'dev',
 		'makepot'
+	]);
+
+	grunt.registerTask( 'domain', [
+		'checktextdomain'
 	]);
 };

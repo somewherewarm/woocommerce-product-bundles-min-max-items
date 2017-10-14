@@ -2,8 +2,8 @@
 /*
 * Plugin Name: WooCommerce Product Bundles - Min/Max Items
 * Plugin URI: http://woocommerce.com/products/product-bundles/
-* Description: WooCommerce Product Bundles plugin that allows you to define min/max bundled item count constraints.
-* Version: 1.2.0-dev
+* Description: WooCommerce Product Bundles plugin that allows you to define min/max bundled item quantity constraints.
+* Version: 1.2.0
 * Author: SomewhereWarm
 * Author URI: http://somewherewarm.gr/
 *
@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class WC_PB_Min_Max_Items {
 
-	public static $version        = '1.2.0-dev';
+	public static $version        = '1.2.0';
 	public static $req_pb_version = '5.5';
 
 	public static function plugin_url() {
@@ -159,7 +159,7 @@ class WC_PB_Min_Max_Items {
 			'i18n_qty_error_plural'           => __( 'You have selected %s items.', 'woocommerce-product-bundles-min-max-items' ),
 			'i18n_qty_error_singular'         => __( 'You have selected 1 item.', 'woocommerce-product-bundles-min-max-items' ),
 			'i18n_qty_error_none'             => __( 'You have not selected any items.', 'woocommerce-product-bundles-min-max-items' ),
-			'i18n_qty_error'                  => __( '%1$s %2$s', 'validation error: status, resolution', 'woocommerce-product-bundles-min-max-items' ),
+			'i18n_qty_error'                  => _x( '%1$s %2$s', 'validation error: status, resolution', 'woocommerce-product-bundles-min-max-items' ),
 		);
 
 		wp_localize_script( 'wcpb-min-max-items-add-to-cart', 'wcpb_min_max_items_params', $params );
@@ -278,7 +278,7 @@ class WC_PB_Min_Max_Items {
 					$status = sprintf( __( 'You have selected %s items.', 'woocommerce-product-bundles-min-max-items' ), $items_qty );
 				}
 
-				$error = sprintf( __( '%1$s %2$s %3$s', 'validation error: action, resulution, status', 'woocommerce-product-bundles-min-max-items' ), $action, $resolution, $status );
+				$error = sprintf( _x( '%1$s %2$s %3$s', 'validation error: action, resulution, status', 'woocommerce-product-bundles-min-max-items' ), $action, $resolution, $status );
 
 				wc_add_notice( $error, 'error' );
 			}
