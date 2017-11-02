@@ -1,0 +1,11 @@
+/* Base */
+
+.bundled_items_selection_status {
+	float: left;
+	font-style: italic;
+	padding-right: 1em;
+	border-width: 0;
+	border-right-width: 1px;
+	border-right-style: solid;
+	border-right-color: rgba(255, 255, 255, .25)!important;
+}
