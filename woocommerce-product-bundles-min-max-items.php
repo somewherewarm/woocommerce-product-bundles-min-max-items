@@ -149,6 +149,10 @@ class WC_PB_Min_Max_Items {
 		wp_register_script( 'wc-pb-min-max-items-add-to-cart', self::plugin_url() . '/assets/js/wc-pb-min-max-items-add-to-cart' . $suffix . '.js', array( 'wc-add-to-cart-bundle' ), self::$version );
 		wp_enqueue_script( 'wc-pb-min-max-items-add-to-cart' );
 
+		wp_register_style( 'wc-pb-min-max-items-single-css', self::plugin_url() . '/assets/css/wc-pb-min-max-items-single.css', false, self::$version );
+		wp_style_add_data( 'wc-pb-min-max-items-single-css', 'rtl', 'replace' );
+		wp_enqueue_style( 'wc-pb-min-max-items-single-css' );
+
 		$params = array(
 			'i18n_min_zero_max_qty_error_singular' => __( 'Please choose an item.', 'woocommerce-product-bundles-min-max-items' ),
 			'i18n_min_max_qty_error_singular'      => __( 'Please choose 1 item.', 'woocommerce-product-bundles-min-max-items' ),
