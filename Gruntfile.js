@@ -127,28 +127,63 @@ module.exports = function( grunt ) {
 				],
 				expand: true
 			}
+		},
+
+		rtlcss: {
+			options: {
+				config: {
+					swapLeftRightInUrl: false,
+					swapLtrRtlInUrl: false,
+					autoRename: false,
+					preserveDirectives: true
+				},
+				properties : [
+					{
+						name: 'swap-fontawesome-left-right-angles',
+						expr: /content/im,
+						action: function( prop, value ) {
+							if ( value === '"\\f105"' ) { // fontawesome-angle-left
+								value = '"\\f104"';
+							}
+							if ( value === '"\\f178"' ) { // fontawesome-long-arrow-right
+								value = '"\\f177"';
+							}
+							return { prop: prop, value: value };
+						}
+					}
+				]
+			},
+			main: {
+				expand: true,
+				ext: '-rtl.css',
+				src: [
+					'assets/css/wc-pb-min-max-items-single.css'
+				]
+			}
 		}
-	});
+	} );
 
 	// Load NPM tasks to be used here.
 	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
 	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
 	grunt.loadNpmTasks( 'grunt-wp-i18n' );
+	grunt.loadNpmTasks( 'grunt-rtlcss' );
 	grunt.loadNpmTasks( 'grunt-checktextdomain' );
 
 	// Register tasks.
 	grunt.registerTask( 'dev', [
 		'checktextdomain',
-		'uglify'
-	]);
+		'uglify',
+		'rtlcss'
+	] );
 
 	grunt.registerTask( 'default', [
 		'dev',
 		'makepot'
-	]);
+	] );
 
 	grunt.registerTask( 'domain', [
 		'checktextdomain'
-	]);
+	] );
 };
