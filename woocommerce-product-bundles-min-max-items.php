@@ -182,9 +182,9 @@ class WC_PB_Min_Max_Items {
 
 		$params = array(
 			'i18n_min_zero_max_qty_error_singular' => __( 'Please choose an item.', 'woocommerce-product-bundles-min-max-items' ),
-			'i18n_min_max_qty_error_singular'      => __( 'Please choose 1 item.', 'woocommerce-product-bundles-min-max-items' ),
-			'i18n_min_qty_error_singular'          => sprintf(  __( 'Please choose at least 1 item.%s', 'woocommerce-product-bundles-min-max-items' ), '%s' ),
-			'i18n_max_qty_error_singular'          => sprintf( __( 'Please choose up to 1 item.%s', 'woocommerce-product-bundles-min-max-items' ), '%s' ),
+			'i18n_min_max_qty_error_singular'      => __( 'Please choose 1 item.%s', 'woocommerce-product-bundles-min-max-items' ),
+			'i18n_min_qty_error_singular'          => __( 'Please choose at least 1 item.%s', 'woocommerce-product-bundles-min-max-items' ),
+			'i18n_max_qty_error_singular'          => __( 'Please choose up to 1 item.%s', 'woocommerce-product-bundles-min-max-items' ),
 			'i18n_min_qty_error_plural'            => sprintf( __( 'Please choose at least %1$s items.%2$s', 'woocommerce-product-bundles-min-max-items' ), '%q', '%s' ),
 			'i18n_max_qty_error_plural'            => sprintf( __( 'Please choose up to %1$s items.%2$s', 'woocommerce-product-bundles-min-max-items' ), '%q', '%s' ),
 			'i18n_min_max_qty_error_plural'        => sprintf( __( 'Please choose %1$s items.%2$s', 'woocommerce-product-bundles-min-max-items' ), '%q', '%s' ),
