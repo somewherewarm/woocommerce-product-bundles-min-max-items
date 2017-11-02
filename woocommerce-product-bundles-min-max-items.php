@@ -63,9 +63,11 @@ class WC_PB_Min_Max_Items {
 		// Add min/max data to template for use by validation script.
 		add_action( 'woocommerce_before_bundled_items', __CLASS__ . '::script_data' );
 		add_action( 'woocommerce_before_composited_bundled_items', __CLASS__ . '::script_data' );
+		// Add-to-Cart validation.
+		add_action( 'woocommerce_add_to_cart_bundle_validation', array( __CLASS__, 'add_to_cart_validation' ), 10, 4 );
 
 		// Cart validation.
-		add_action( 'woocommerce_add_to_cart_bundle_validation', __CLASS__ . '::cart_validation', 10, 4 );
+		add_action( 'woocommerce_check_cart_items', array( __CLASS__, 'cart_validation' ), 15 );
 
 		// Change bundled item quantities.
 		add_filter( 'woocommerce_bundled_item_quantity', __CLASS__ . '::bundled_item_quantity', 10, 3 );
@@ -194,101 +196,128 @@ class WC_PB_Min_Max_Items {
 
 	/**
 	 * Cart validation.
+	 */
+	public static function cart_validation() {
+
+		foreach ( WC()->cart->cart_contents as $cart_item_key => $cart_item ) {
+
+			if ( wc_pb_is_bundle_container_cart_item( $cart_item ) ) {
+
+				$configuration  = isset( $cart_item[ 'stamp' ] ) ? $cart_item[ 'stamp' ] : false;
+				$items_selected = 0;
+
+				$bundle = $cart_item[ 'data' ];
+
+				$min_meta = $bundle->get_meta( '_wcpb_min_qty_limit', true );
+				$max_meta = $bundle->get_meta( '_wcpb_max_qty_limit', true );
+
+				$items_min = $min_meta > 0 ? absint( $min_meta ) : '';
+				$items_max = $max_meta > 0 ? absint( $max_meta ) : '';
+
+				if ( $configuration ) {
+					foreach ( $configuration as $item_id => $item_configuration ) {
+						$item_qty   = isset( $item_configuration[ 'quantity' ] ) ? $item_configuration[ 'quantity' ] : 0;
+						$items_selected += $item_qty;
+					}
+				}
+
+				$items_invalid = false;
+
+				if ( $items_min !== '' && $items_selected < $items_min ) {
+					$items_invalid = true;
+				} else if ( $items_max !== '' && $items_selected > $items_max ) {
+					$items_invalid = true;
+				}
+
+				if ( $items_invalid ) {
+
+					$bundle_title = $bundle->get_title();
+					$action       = sprintf( __( 'Invalid &quot;%s&quot; configuration', 'woocommerce-product-bundles-min-max-items' ), $bundle_title );
+
+					if ( $items_min === $items_max ) {
+						$resolution = sprintf( _n( 'please choose 1 item', 'please choose %s items', $items_min, 'woocommerce-product-bundles-min-max-items' ), $items_min );
+					} elseif ( $items_selected < $items_min ) {
+						$resolution = sprintf( _n( 'please choose at least 1 item', 'please choose at least %s items', $items_min, 'woocommerce-product-bundles-min-max-items' ), $items_min );
+					} else {
+						$resolution = sprintf( _n( 'please limit your selection to 1 item', 'please choose up to %s items', $items_max, 'woocommerce-product-bundles-min-max-items' ), $items_max );
+					}
+
+					$message = sprintf( _x( '%1$s &ndash; %2$s.', 'cart validation error: action, resolution', 'woocommerce-product-bundles-min-max-items' ), $action, $resolution );
+
+					wc_add_notice( $message, 'error' );
+
+					$is_valid = false;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Add-to-Cart validation.
 	 *
 	 * @param  bool                 $result
 	 * @param  int                  $bundle_id
 	 * @param  WC_PB_Stock_Manager  $stock_data
 	 * @param  array                $configuration
+	 * @return boolean
 	 */
-	public static function cart_validation( $result, $bundle_id, $stock_data, $configuration = array() ) {
+	public static function add_to_cart_validation( $is_valid, $bundle_id, $stock_data, $configuration = array() ) {
 
-		if ( $result ) {
+		if ( $is_valid ) {
 
-			$items_qty = 0;
-			$bundle    = wc_get_product( $bundle_id );
+			$bundle = $stock_data->product;
 
-			$min_meta  = $bundle->get_meta( '_wcpb_min_qty_limit', true );
-			$max_meta  = $bundle->get_meta( '_wcpb_max_qty_limit', true );
+			$min_meta = $bundle->get_meta( '_wcpb_min_qty_limit', true );
+			$max_meta = $bundle->get_meta( '_wcpb_max_qty_limit', true );
 
 			$items_min = $min_meta > 0 ? absint( $min_meta ) : '';
 			$items_max = $max_meta > 0 ? absint( $max_meta ) : '';
 
-			$items     = $stock_data->get_items();
+			$items          = $stock_data->get_items();
+			$items_selected = 0;
 
 			foreach ( $items as $item ) {
-				$item_id    = isset( $item->bundled_item ) && $item->bundled_item ? $item->bundled_item->item_id : false;
-				$item_qty   = $item_id && isset( $configuration[ $item_id ] ) && isset( $configuration[ $item_id ][ 'quantity' ] ) ? $configuration[ $item_id ][ 'quantity' ] : $item->quantity;
-				$items_qty += $item_qty;
+				$item_id         = isset( $item->bundled_item ) && $item->bundled_item ? $item->bundled_item->item_id : false;
+				$item_qty        = $item_id && isset( $configuration[ $item_id ] ) && isset( $configuration[ $item_id ][ 'quantity' ] ) ? $configuration[ $item_id ][ 'quantity' ] : $item->quantity;
+				$items_selected += $item_qty;
 			}
 
-			$resolution = '';
+			$items_invalid = false;
 
-			if ( $items_min !== '' && $items_qty < $items_min ) {
-
-				$result = false;
-
-				if ( $items_min === 1 ) {
-
-					if ( $items_min === $items_max ) {
-						$resolution = __( 'you must select 1 item.', 'woocommerce-product-bundles-min-max-items' );
-					} else {
-						$resolution = __( 'you must select at least 1 item.', 'woocommerce-product-bundles-min-max-items' );
-					}
-
-				} else {
-
-					if ( $items_min === $items_max ) {
-						$resolution = __( 'you must select %s items.', 'woocommerce-product-bundles-min-max-items' );
-					} else {
-						$resolution = __( 'you must select at least %s items.', 'woocommerce-product-bundles-min-max-items' );
-					}
-
-					$resolution = sprintf( $resolution, $items_min );
-				}
-
-			} else if ( $items_max !== '' && $items_qty > $items_max ) {
-
-				$result = false;
-
-				if ( $items_max === 1 ) {
-
-					if ( $items_min === $items_max ) {
-						$resolution = __( 'you must select 1 item.', 'woocommerce-product-bundles-min-max-items' );
-					} else {
-						$resolution = __( 'you must select at most 1 item.', 'woocommerce-product-bundles-min-max-items' );
-					}
-
-				} else {
-
-					if ( $items_min === $items_max ) {
-						$resolution = __( 'you must select %s items.', 'woocommerce-product-bundles-min-max-items' );
-					} else {
-						$resolution = __( 'you must select at most %s items.', 'woocommerce-product-bundles-min-max-items' );
-					}
-
-					$resolution = sprintf( $resolution, $items_max );
-				}
+			if ( $items_min !== '' && $items_selected < $items_min ) {
+				$items_invalid = true;
+			} else if ( $items_max !== '' && $items_selected > $items_max ) {
+				$items_invalid = true;
 			}
 
-			if ( ! $result ) {
+			if ( $items_invalid ) {
 
-				$action = sprintf( __( 'To purchase &quot;%s&quot;', 'woocommerce-product-bundles-min-max-items' ), get_the_title( $bundle_id ) );
+				$bundle_title = $bundle->get_title();
+				$action       = sprintf( __( '&quot;%s&quot; cannot be added to the cart', 'woocommerce-product-bundles-min-max-items' ), $bundle_title );
 
-				if ( $items_qty === 0 ) {
-					$status = __( 'You have not selected any items.', 'woocommerce-product-bundles-min-max-items' );
-				} elseif ( $items_qty === 1 ) {
-					$status = __( 'You have selected 1 item.', 'woocommerce-product-bundles-min-max-items' );
+				if ( $items_min === $items_max ) {
+					$resolution = sprintf( _n( 'please choose 1 item', 'please choose %s items', $items_min, 'woocommerce-product-bundles-min-max-items' ), $items_min );
+				} elseif ( $items_selected < $items_min ) {
+					$resolution = sprintf( _n( 'please choose at least 1 item', 'please choose at least %s items', $items_min, 'woocommerce-product-bundles-min-max-items' ), $items_min );
 				} else {
-					$status = sprintf( __( 'You have selected %s items.', 'woocommerce-product-bundles-min-max-items' ), $items_qty );
+					$resolution = sprintf( _n( 'please limit your selection to 1 item', 'please choose up to %s items', $items_max, 'woocommerce-product-bundles-min-max-items' ), $items_max );
 				}
 
-				$error = sprintf( _x( '%1$s %2$s %3$s', 'validation error: action, resulution, status', 'woocommerce-product-bundles-min-max-items' ), $action, $resolution, $status );
+				if ( $items_selected === 1 ) {
+					$status = __( '(you have chosen 1)', 'woocommerce-product-bundles-min-max-items' );
+				} elseif ( $items_selected > 1 ) {
+					$status = sprintf( __( '(you have chosen %s)', 'woocommerce-product-bundles-min-max-items' ), $items_selected );
+				}
 
-				wc_add_notice( $error, 'error' );
+				$message = sprintf( _x( '%1$s &ndash; %2$s%3$s.', 'add-to-cart validation error: action, resolution, status', 'woocommerce-product-bundles-min-max-items' ), $action, $resolution, $status );
+
+				wc_add_notice( $message, 'error' );
+
+				$is_valid = false;
 			}
 		}
 
-		return $result;
+		return $is_valid;
 	}
 
 	/**
@@ -628,7 +657,6 @@ class WC_PB_Min_Max_Items {
 		$max_qty = $bundle->get_meta( '_wcpb_max_qty_limit', true );
 
 		if ( $min_qty || $max_qty ) {
-
 			$requires_input = true;
 		}
 
