@@ -1,4 +1,4 @@
-/* global wcpb_min_max_items_params */
+/* global wc_pb_min_max_items_params */
 
 ;( function ( $, window, document ) {
 
@@ -40,20 +40,20 @@
 							if ( min_max_validation.min === 1 ) {
 
 								if ( min_max_validation.min === min_max_validation.max ) {
-									qty_error_prompt = wcpb_min_max_items_params.i18n_min_max_qty_error_singular;
+									qty_error_prompt = wc_pb_min_max_items_params.i18n_min_zero_max_qty_error_singular;
 								} else {
-									qty_error_prompt = wcpb_min_max_items_params.i18n_min_qty_error_singular;
+									qty_error_prompt = wc_pb_min_max_items_params.i18n_min_qty_error_singular;
 								}
 
 							} else {
 
 								if ( min_max_validation.min === min_max_validation.max ) {
-									qty_error_prompt = wcpb_min_max_items_params.i18n_min_max_qty_error_plural;
+									qty_error_prompt = wc_pb_min_max_items_params.i18n_min_max_qty_error_plural;
 								} else {
-									qty_error_prompt = wcpb_min_max_items_params.i18n_min_qty_error_plural;
+									qty_error_prompt = wc_pb_min_max_items_params.i18n_min_qty_error_plural;
 								}
 
-								qty_error_prompt = qty_error_prompt.replace( '%s', parseInt( min_max_validation.min ) );
+								qty_error_prompt = qty_error_prompt.replace( '%q', parseInt( min_max_validation.min ) );
 							}
 
 						} else if ( min_max_validation.max !== '' && total_qty > parseInt( min_max_validation.max ) ) {
@@ -63,20 +63,20 @@
 							if ( min_max_validation.max === 1 ) {
 
 								if ( min_max_validation.min === min_max_validation.max ) {
-									qty_error_prompt = wcpb_min_max_items_params.i18n_min_max_qty_error_singular;
+									qty_error_prompt = wc_pb_min_max_items_params.i18n_min_max_qty_error_singular;
 								} else {
-									qty_error_prompt = wcpb_min_max_items_params.i18n_max_qty_error_singular;
+									qty_error_prompt = wc_pb_min_max_items_params.i18n_max_qty_error_singular;
 								}
 
 							} else {
 
 								if ( min_max_validation.min === min_max_validation.max ) {
-									qty_error_prompt = wcpb_min_max_items_params.i18n_min_max_qty_error_plural;
+									qty_error_prompt = wc_pb_min_max_items_params.i18n_min_max_qty_error_plural;
 								} else {
-									qty_error_prompt = wcpb_min_max_items_params.i18n_max_qty_error_plural;
+									qty_error_prompt = wc_pb_min_max_items_params.i18n_max_qty_error_plural;
 								}
 
-								qty_error_prompt = qty_error_prompt.replace( '%s', parseInt( min_max_validation.max ) );
+								qty_error_prompt = qty_error_prompt.replace( '%q', parseInt( min_max_validation.max ) );
 							}
 						}
 
@@ -102,14 +102,14 @@
 								}
 
 							} else if ( total_qty === 1 ) {
-								qty_error_status = wcpb_min_max_items_params.i18n_qty_error_singular;
+								qty_error_status = wc_pb_min_max_items_params.i18n_qty_error_singular;
 							} else {
-								qty_error_status = wcpb_min_max_items_params.i18n_qty_error_plural;
+								qty_error_status = wc_pb_min_max_items_params.i18n_qty_error_plural;
 							}
 
 							qty_error_status = qty_error_status.replace( '%s', total_qty );
 
-							bundle.add_validation_message( wcpb_min_max_items_params.i18n_qty_error.replace( '%1$s', qty_error_status ).replace( '%2$s', qty_error_prompt ) );
+							bundle.add_validation_message( qty_error_prompt.replace( '%s', wc_pb_min_max_items_params.i18n_qty_error_status_format.replace( '%s', qty_error_status ) ) );
 						}
 
 					} );

@@ -146,23 +146,23 @@ class WC_PB_Min_Max_Items {
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-		wp_register_script( 'wcpb-min-max-items-add-to-cart', self::plugin_url() . '/assets/js/wcpb-min-max-items-add-to-cart' . $suffix . '.js', array( 'wc-add-to-cart-bundle' ), self::$version );
-		wp_enqueue_script( 'wcpb-min-max-items-add-to-cart' );
+		wp_register_script( 'wc-pb-min-max-items-add-to-cart', self::plugin_url() . '/assets/js/wc-pb-min-max-items-add-to-cart' . $suffix . '.js', array( 'wc-add-to-cart-bundle' ), self::$version );
+		wp_enqueue_script( 'wc-pb-min-max-items-add-to-cart' );
 
 		$params = array(
-			'i18n_min_qty_error_plural'       => __( 'Please select at least %s items.', 'woocommerce-product-bundles-min-max-items' ),
-			'i18n_min_qty_error_singular'     => __( 'Please select at least 1 item.', 'woocommerce-product-bundles-min-max-items' ),
-			'i18n_max_qty_error_plural'       => __( 'Please select at most %s items.', 'woocommerce-product-bundles-min-max-items' ),
-			'i18n_max_qty_error_singular'     => __( 'Please select at most 1 item.', 'woocommerce-product-bundles-min-max-items' ),
-			'i18n_min_max_qty_error_plural'   => __( 'Please select %s items.', 'woocommerce-product-bundles-min-max-items' ),
-			'i18n_min_max_qty_error_singular' => __( 'Please select 1 item.', 'woocommerce-product-bundles-min-max-items' ),
-			'i18n_qty_error_plural'           => __( 'You have selected %s items.', 'woocommerce-product-bundles-min-max-items' ),
-			'i18n_qty_error_singular'         => __( 'You have selected 1 item.', 'woocommerce-product-bundles-min-max-items' ),
-			'i18n_qty_error_none'             => __( 'You have not selected any items.', 'woocommerce-product-bundles-min-max-items' ),
-			'i18n_qty_error'                  => _x( '%1$s %2$s', 'validation error: status, resolution', 'woocommerce-product-bundles-min-max-items' ),
+			'i18n_min_zero_max_qty_error_singular' => __( 'Please choose an item.', 'woocommerce-product-bundles-min-max-items' ),
+			'i18n_min_max_qty_error_singular'      => __( 'Please choose 1 item.', 'woocommerce-product-bundles-min-max-items' ),
+			'i18n_min_qty_error_singular'          => sprintf(  __( 'Please choose at least 1 item.%s', 'woocommerce-product-bundles-min-max-items' ), '%s' ),
+			'i18n_max_qty_error_singular'          => sprintf( __( 'Please choose up to 1 item.%s', 'woocommerce-product-bundles-min-max-items' ), '%s' ),
+			'i18n_min_qty_error_plural'            => sprintf( __( 'Please choose at least %1$s items.%2$s', 'woocommerce-product-bundles-min-max-items' ), '%q', '%s' ),
+			'i18n_max_qty_error_plural'            => sprintf( __( 'Please choose up to %1$s items.%2$s', 'woocommerce-product-bundles-min-max-items' ), '%q', '%s' ),
+			'i18n_min_max_qty_error_plural'        => sprintf( __( 'Please choose %1$s items.%2$s', 'woocommerce-product-bundles-min-max-items' ), '%q', '%s' ),
+			'i18n_qty_error_plural'                => __( '%s items selected', 'woocommerce-product-bundles-min-max-items' ),
+			'i18n_qty_error_singular'              => __( '1 item selected', 'woocommerce-product-bundles-min-max-items' ),
+			'i18n_qty_error_status_format'         => _x( '<span class="bundled_items_selection_status">%s</span>', 'validation error status format', 'woocommerce-product-bundles-min-max-items' )
 		);
 
-		wp_localize_script( 'wcpb-min-max-items-add-to-cart', 'wcpb_min_max_items_params', $params );
+		wp_localize_script( 'wc-pb-min-max-items-add-to-cart', 'wc_pb_min_max_items_params', $params );
 	}
 
 	/**
