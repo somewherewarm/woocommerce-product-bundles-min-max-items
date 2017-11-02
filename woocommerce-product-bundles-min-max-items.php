@@ -3,7 +3,7 @@
 * Plugin Name: WooCommerce Product Bundles - Min/Max Items
 * Plugin URI: http://woocommerce.com/products/product-bundles/
 * Description: WooCommerce Product Bundles plugin that allows you to define min/max bundled item quantity constraints.
-* Version: 1.2.0
+* Version: 1.3.0
 * Author: SomewhereWarm
 * Author URI: http://somewherewarm.gr/
 *
@@ -25,44 +25,69 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class WC_PB_Min_Max_Items {
 
-	public static $version        = '1.2.0';
+	/**
+	 * Plugin version.
+	 *
+	 * @var string
+	 */
+	public static $version = '1.3.0';
+
+	/**
+	 * Min required PB version.
+	 *
+	 * @var string
+	 */
 	public static $req_pb_version = '5.5';
 
+	/**
+	 * Plugin URL.
+	 *
+	 * @return string
+	 */
 	public static function plugin_url() {
 		return plugins_url( basename( plugin_dir_path(__FILE__) ), basename( __FILE__ ) );
 	}
 
+	/**
+	 * Plugin path.
+	 *
+	 * @return string
+	 */
 	public static function plugin_path() {
 		return untrailingslashit( plugin_dir_path( __FILE__ ) );
 	}
 
+	/**
+	 * Fire in the hole!
+	 */
 	public static function init() {
 		add_action( 'plugins_loaded', __CLASS__ . '::load_plugin' );
 	}
 
 	/**
-	 * Lights on.
+	 * Hooks.
 	 */
 	public static function load_plugin() {
 
 		if ( ! function_exists( 'WC_PB' ) || version_compare( WC_PB()->version, self::$req_pb_version ) < 0 ) {
-			add_action( 'admin_notices', __CLASS__ . '::pb_admin_notice' );
+			add_action( 'admin_notices', array( __CLASS__, 'pb_admin_notice' ) );
 			return false;
 		}
 
 		// Display min/max qty settings in "Bundled Products" tab.
-		add_action( 'woocommerce_bundled_products_admin_config', __CLASS__ . '::display_options', 15 );
+		add_action( 'woocommerce_bundled_products_admin_config', array( __CLASS__, 'display_options' ), 15 );
 
 		// Save min/max qty settings.
 		add_action( 'woocommerce_admin_process_product_object', array( __CLASS__, 'save_meta' ) );
 
 		// Validation script.
-		add_action( 'woocommerce_bundle_add_to_cart', __CLASS__ . '::script' );
-		add_action( 'woocommerce_composite_add_to_cart', __CLASS__ . '::script' );
+		add_action( 'woocommerce_bundle_add_to_cart', array( __CLASS__, 'script' ) );
+		add_action( 'woocommerce_composite_add_to_cart', array( __CLASS__, 'script' ) );
 
 		// Add min/max data to template for use by validation script.
-		add_action( 'woocommerce_before_bundled_items', __CLASS__ . '::script_data' );
-		add_action( 'woocommerce_before_composited_bundled_items', __CLASS__ . '::script_data' );
+		add_action( 'woocommerce_before_bundled_items', array( __CLASS__, 'script_data' ) );
+		add_action( 'woocommerce_before_composited_bundled_items', array( __CLASS__, 'script_data' ) );
+
 		// Add-to-Cart validation.
 		add_action( 'woocommerce_add_to_cart_bundle_validation', array( __CLASS__, 'add_to_cart_validation' ), 10, 4 );
 
@@ -70,14 +95,14 @@ class WC_PB_Min_Max_Items {
 		add_action( 'woocommerce_check_cart_items', array( __CLASS__, 'cart_validation' ), 15 );
 
 		// Change bundled item quantities.
-		add_filter( 'woocommerce_bundled_item_quantity', __CLASS__ . '::bundled_item_quantity', 10, 3 );
-		add_filter( 'woocommerce_bundled_item_quantity_max', __CLASS__ . '::bundled_item_quantity_max', 10, 3 );
+		add_filter( 'woocommerce_bundled_item_quantity', array( __CLASS__, 'bundled_item_quantity' ), 10, 3 );
+		add_filter( 'woocommerce_bundled_item_quantity_max', array( __CLASS__, 'bundled_item_quantity_max' ), 10, 3 );
 
 		// When min/max qty constraints are present, require input.
-		add_filter( 'woocommerce_bundle_requires_input', __CLASS__ . '::min_max_bundle_requires_input', 10, 2 );
+		add_filter( 'woocommerce_bundle_requires_input', array( __CLASS__, 'min_max_bundle_requires_input' ), 10, 2 );
 
-		// Cart validation.
-		add_action( 'init', __CLASS__ . '::localize_plugin' );
+		// Localization.
+		add_action( 'init', array( __CLASS__, 'localize_plugin' ) );
 	}
 
 	/**
