@@ -134,16 +134,16 @@ class WC_PB_Min_Max_Items {
 				'id'            => '_wcpb_min_qty_limit',
 				'wrapper_class' => 'bundled_product_data_field',
 				'type'          => 'number',
-				'label'         => __( 'Quantity Min', 'woocommerce-product-bundles-min-max-items' ),
-				'desc_tip'      => 'false',
+				'label'         => __( 'Items required (&ge;)', 'woocommerce-product-bundles-min-max-items' ),
+				'desc_tip'      => true,
 				'description'   => __( 'Minimum required quantity of bundled items.', 'woocommerce-product-bundles-min-max-items' )
 			) );
 			woocommerce_wp_text_input( array(
 				'id'            => '_wcpb_max_qty_limit',
 				'wrapper_class' => 'bundled_product_data_field',
 				'type'          => 'number',
-				'label'         => __( 'Quantity Max', 'woocommerce-product-bundles-min-max-items' ),
-				'desc_tip'      => 'false',
+				'label'         => __( 'Items allowed (&le;)', 'woocommerce-product-bundles-min-max-items' ),
+				'desc_tip'      => true,
 				'description'   => __( 'Maximum allowed quantity of bundled items.', 'woocommerce-product-bundles-min-max-items' ) ) );
 		?></div><?php
 	}
