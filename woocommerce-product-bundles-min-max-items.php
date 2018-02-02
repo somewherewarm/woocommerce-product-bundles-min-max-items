@@ -3,7 +3,7 @@
 * Plugin Name: WooCommerce Product Bundles - Min/Max Items
 * Plugin URI: http://woocommerce.com/products/product-bundles/
 * Description: WooCommerce Product Bundles plugin that allows you to define min/max bundled item quantity constraints.
-* Version: 1.3.1
+* Version: 1.3.2
 * Author: SomewhereWarm
 * Author URI: http://somewherewarm.gr/
 *
@@ -33,7 +33,7 @@ class WC_PB_Min_Max_Items {
 	 *
 	 * @var string
 	 */
-	public static $version = '1.3.1';
+	public static $version = '1.3.2';
 
 	/**
 	 * Min required PB version.
@@ -260,7 +260,7 @@ class WC_PB_Min_Max_Items {
 				if ( $items_invalid ) {
 
 					$bundle_title = $bundle->get_title();
-					$action       = sprintf( __( 'Invalid &quot;%s&quot; configuration', 'woocommerce-product-bundles-min-max-items' ), $bundle_title );
+					$action       = sprintf( __( '&quot;%s&quot; cannot be purchased', 'woocommerce-product-bundles-min-max-items' ), $bundle_title );
 
 					if ( $items_min === $items_max ) {
 						$resolution = sprintf( _n( 'please choose 1 item', 'please choose %s items', $items_min, 'woocommerce-product-bundles-min-max-items' ), $items_min );
@@ -332,9 +332,9 @@ class WC_PB_Min_Max_Items {
 				}
 
 				if ( $items_selected === 1 ) {
-					$status = __( '(you have chosen 1)', 'woocommerce-product-bundles-min-max-items' );
+					$status = __( ' (you have chosen 1)', 'woocommerce-product-bundles-min-max-items' );
 				} elseif ( $items_selected > 1 ) {
-					$status = sprintf( __( '(you have chosen %s)', 'woocommerce-product-bundles-min-max-items' ), $items_selected );
+					$status = sprintf( __( ' (you have chosen %s)', 'woocommerce-product-bundles-min-max-items' ), $items_selected );
 				}
 
 				$message = sprintf( _x( '%1$s &ndash; %2$s%3$s.', 'add-to-cart validation error: action, resolution, status', 'woocommerce-product-bundles-min-max-items' ), $action, $resolution, $status );
