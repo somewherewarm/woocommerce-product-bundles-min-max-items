@@ -16,7 +16,7 @@
 * WC requires at least: 3.0
 * WC tested up to: 3.3
 *
-* Copyright: © 2017 SomewhereWarm SMPC.
+* Copyright: © 2018 SomewhereWarm SMPC.
 * License: GNU General Public License v3.0
 * License URI: http://www.gnu.org/licenses/gpl-3.0.html
 */
