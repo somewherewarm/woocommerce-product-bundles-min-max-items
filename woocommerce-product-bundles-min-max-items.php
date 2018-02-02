@@ -14,7 +14,7 @@
 * Tested up to: 4.9
 *
 * WC requires at least: 3.0
-* WC tested up to: 3.2
+* WC tested up to: 3.3
 *
 * Copyright: © 2017 SomewhereWarm SMPC.
 * License: GNU General Public License v3.0
