@@ -36,15 +36,15 @@ msgid "Maximum allowed quantity of bundled items."
 msgstr ""
 
 #: woocommerce-product-bundles-min-max-items.php:187
-msgid "Please choose an item."
+msgid "Bitte wähle deine Schokolade."
 msgstr ""
 
 #: woocommerce-product-bundles-min-max-items.php:188
-msgid "Please choose 1 item.%s"
+msgid "Bitte wähle mindestens 1 Schokoladen.%s"
 msgstr ""
 
 #: woocommerce-product-bundles-min-max-items.php:189
-msgid "Please choose at least 1 item.%s"
+msgid "Bitte wähle mindestens 3 Schokoladen.%s"
 msgstr ""
 
 #: woocommerce-product-bundles-min-max-items.php:190
@@ -52,7 +52,7 @@ msgid "Please choose up to 1 item.%s"
 msgstr ""
 
 #: woocommerce-product-bundles-min-max-items.php:191
-msgid "Please choose at least %1$s items.%2$s"
+msgid "Bitte wähle mindestens %1$s Schokoladen.%2$s"
 msgstr ""
 
 #: woocommerce-product-bundles-min-max-items.php:192
@@ -60,15 +60,15 @@ msgid "Please choose up to %1$s items.%2$s"
 msgstr ""
 
 #: woocommerce-product-bundles-min-max-items.php:193
-msgid "Please choose %1$s items.%2$s"
+msgid "Bitte wähle %1$s Schokoladen.%2$s"
 msgstr ""
 
 #: woocommerce-product-bundles-min-max-items.php:194
-msgid "%s items selected"
+msgid "%s Schokoladen ausgewählt"
 msgstr ""
 
 #: woocommerce-product-bundles-min-max-items.php:195
-msgid "1 item selected"
+msgid "1 Schokoladen ausgewählt"
 msgstr ""
 
 #: woocommerce-product-bundles-min-max-items.php:263
@@ -77,7 +77,7 @@ msgstr ""
 
 #: woocommerce-product-bundles-min-max-items.php:266
 #: woocommerce-product-bundles-min-max-items.php:327
-msgid "please choose 1 item"
+msgid "Bitte wähle mindestens 3 Schokoladen."
 msgid_plural "please choose %s items"
 msgstr[0] ""
 msgstr[1] ""
@@ -101,11 +101,11 @@ msgid "&quot;%s&quot; cannot be added to the cart"
 msgstr ""
 
 #: woocommerce-product-bundles-min-max-items.php:335
-msgid " (you have chosen 1)"
+msgid " (Du hast 1 Schokolade ausgewäht.)"
 msgstr ""
 
 #: woocommerce-product-bundles-min-max-items.php:337
-msgid " (you have chosen %s)"
+msgid " (Du hast %s Schokoladen ausgewählt.)"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
