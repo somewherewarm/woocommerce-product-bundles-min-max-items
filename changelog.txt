@@ -1,5 +1,8 @@
 *** WooCommerce Product Bundles - Min/Max Items ***
 
+2019.04.10 - version 1.3.5
+* Tweak - Update supported WP/WC versions.
+
 2018.10.08 - version 1.3.4
 * Tweak - Removed admin options wrapper div.
 
