@@ -1,4 +1,4 @@
-# WooCommerce Product Bundles - Min/Max Items
+# Min/Max Items for WooCommerce Product Bundles
 
 ### What's This?
 
