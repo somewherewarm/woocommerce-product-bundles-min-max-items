@@ -1,12 +1,12 @@
 {
 	"name": "woocommerce-product-bundles-min-max-items",
-	"title": "WooCommerce Product Bundles - Min/Max Items",
+	"title": "Min/Max Items for WooCommerce Product Bundles",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/somewherewarm/woocommerce-product-bundles-min-max-items.git"
 	},
 	"license": "GPL-3.0+",
-	"version": "1.3.6",
+	"version": "1.4.0",
 	"homepage": "https://woocommerce.com/products/product-bundles/",
 	"main": "Gruntfile.js",
 	"devDependencies": {
