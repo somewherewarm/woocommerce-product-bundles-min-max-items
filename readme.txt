@@ -27,7 +27,7 @@ Once you have used these options to set a minimum or maximum quantity limit, cus
 
 Developers may checkout and contribute to the plugin at its [GitHub Repository](https://github.com/somewherewarm/woocommerce-product-bundles-min-max-items).
 
-**Important**: This plugins requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5699243) extension. Before installing this plugin please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
+**Important**: This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5699243) extension. Before installing this plugin please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
 
 
 == Installation ==
