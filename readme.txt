@@ -14,6 +14,11 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Free mini-extension for WooCommerce Product Bundles that allows you to control the minimum or maximum quantity of bundled products that customers must choose in order to purchase a Product Bundle.
 
 
+== Installation ==
+
+This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5699243) extension. Before installing this plugin, please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
+
+
 == Description ==
 
 Need a way to create pick-and-mix boxes with the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5699243) extension? This plugin allows you to control the minimum or maximum quantity of bundled products that customers must choose in order to purchase a Product Bundle.
