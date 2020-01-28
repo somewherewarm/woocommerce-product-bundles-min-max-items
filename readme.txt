@@ -30,15 +30,6 @@ Developers may checkout and contribute to the plugin at its [GitHub Repository](
 **Important**: This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5699243) extension. Before installing this plugin please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
 
 
-== Installation ==
-
-1. Download the plugin.
-2. Go to your WordPress Dashboard and then click **Plugins > Add New**.
-3. Click **Upload Plugin** at the top.
-4. Click **Choose File** and select the .zip file you downloaded in **Step 1**.
-5. Click **Install Now** and **Activate** the plugin.
-
-
 == Screenshots ==
 
 1. Once you have set a minimum or maximum quantity limit for a Product Bundle, customers must choose above or below the specified amount to make a purchase.
