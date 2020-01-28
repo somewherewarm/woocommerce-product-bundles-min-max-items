@@ -1,4 +1,4 @@
-=== Min/Max Items for WooCommerce Product Bundles ===
+=== Product Bundles - Min/Max Items for WooCommerce ===
 
 Contributors: franticpsyx, SomewhereWarm
 Tags: woocommerce, product, bundles, products, min, max, quantity, restrict, validation, limit

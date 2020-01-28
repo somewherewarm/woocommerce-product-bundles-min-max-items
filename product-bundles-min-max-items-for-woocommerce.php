@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Min/Max Items for WooCommerce Product Bundles
+ * Plugin Name: Product Bundles - Min/Max Items for WooCommerce
  * Plugin URI: https://somewherewarm.gr/
  * Description: Free mini-extension for WooCommerce Product Bundles that allows you to control the minimum or maximum quantity of bundled products that customers must choose in order to purchase a Product Bundle.
  * Version: 1.4.0
@@ -122,7 +122,7 @@ class WC_PB_Min_Max_Items {
 	 * PB version check notice.
 	 */
 	public static function pb_admin_notice() {
-	    echo '<div class="error"><p>' . sprintf( __( '<strong>Min/Max Items</strong> requires WooCommerce Product Bundles <strong>%s</strong> or higher.', 'woocommerce-product-bundles-min-max-items' ), self::$req_pb_version ) . '</p></div>';
+	    echo '<div class="error"><p>' . sprintf( __( '<strong>Product Bundles &ndash; Min/Max Items</strong> requires WooCommerce Product Bundles <strong>%s</strong> or higher.', 'woocommerce-product-bundles-min-max-items' ), self::$req_pb_version ) . '</p></div>';
 	}
 
 	/**

@@ -1,6 +1,6 @@
 {
 	"name": "woocommerce-product-bundles-min-max-items",
-	"title": "Min/Max Items for WooCommerce Product Bundles",
+	"title": "Product Bundles - Min/Max Items for WooCommerce",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/somewherewarm/woocommerce-product-bundles-min-max-items.git"
