@@ -1,7 +1,7 @@
 === Product Bundles - Min/Max Items for WooCommerce ===
 
 Contributors: franticpsyx, SomewhereWarm
-Tags: woocommerce, product bundles, bundled, products, min, max, quantity, restrict, limit, pick and mix, mix, match, gift box,
+Tags: woocommerce, product, bundles, bundled, quantity, min, max, item, items, count, restrict, limit
 Requires at least: 4.4
 Tested up to: 5.3
 Requires PHP: 5.6
@@ -14,31 +14,36 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Free mini-extension for WooCommerce Product Bundles that allows you to control the minimum or maximum quantity of bundled products that customers must choose in order to purchase a Product Bundle.
 
 
+== Description ==
+
+Want to use WooCommerce to sell personalized cases of wine? Boxes of cupcakes? T-shirts by the dozen?
+
+This feature plugin extends the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension, allowing you to create any type of pick-and-mix product bundle.
+
+Use it to control the minimum or maximum quantity of products that customers must choose in order to purchase a [Product Bundle](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457).
+
+
 == Installation ==
 
 This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension. Before installing this plugin, please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
 
 
-== Description ==
-
-Need a way to create pick-and-mix boxes with the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension? This plugin allows you to control the minimum or maximum quantity of bundled products that customers must choose in order to purchase a Product Bundle.
+== Documentation ==
 
 The plugin adds two new options under **Product Data > Bundled Products**:
 
 * **Items required (≥)**; and
 * **Items allowed (≤)**.
 
-Once you have used these options to set a minimum or maximum quantity limit, customers must choose above or below the specified amount to make a purchase.
+Once you have used these options to set a minimum or maximum quantity limit, customers must choose a quantity of products within the specified range to make a purchase.
 
-Developers may checkout and contribute to the plugin at its [GitHub Repository](https://github.com/somewherewarm/woocommerce-product-bundles-min-max-items).
-
-**Important**: This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension. Before installing this plugin please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
+Want to contribute? Please submit your issue reports and pull requests on [GitHub](https://github.com/somewherewarm/woocommerce-product-bundles-min-max-items).
 
 
 == Screenshots ==
 
-1. Once you have set a minimum or maximum quantity limit for a Product Bundle, customers must choose above or below the specified amount to make a purchase.
-2. Min/max item quantity contraints can be added to a Product Bundle under **Product Data > Bundled Products**, using the **Items required (≥)** and **Items allowed (≤)** fields.
+1. A pick-and-mix Product Bundle.
+2. Setting a minimum or maximum quantity of products in a Product Bundle.
 
 
 == Changelog ==
