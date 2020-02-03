@@ -18,9 +18,7 @@ Free mini-extension for WooCommerce Product Bundles that allows you to control t
 
 Want to use WooCommerce to sell personalized cases of wine? Boxes of cupcakes? T-shirts by the dozen?
 
-This feature plugin extends the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension, allowing you to create any type of pick-and-mix product bundle.
-
-Use it to control the minimum or maximum quantity of products that customers must choose in order to purchase a [Product Bundle](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457).
+This plugin adds [pick-and-mix functionality](https://docs.woocommerce.com/document/bundles/bundles-use-case-pick-and-mix/) to the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension. Use it to control the minimum or maximum quantity of products that customers must choose in order to purchase a [Product Bundle](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457).
 
 
 == Installation ==
@@ -30,7 +28,7 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 == Documentation ==
 
-The plugin adds two new options under **Product Data > Bundled Products**:
+This plugin adds two new options under **Product Data > Bundled Products**:
 
 * **Items required (≥)**; and
 * **Items allowed (≤)**.
@@ -43,7 +41,7 @@ Want to contribute? Please submit your issue reports and pull requests on [GitHu
 == Screenshots ==
 
 1. A pick-and-mix Product Bundle.
-2. Setting a minimum or maximum quantity of products in a Product Bundle.
+2. Setting the minimum or maximum quantity of products that customers must choose in a Product Bundle.
 
 
 == Changelog ==
