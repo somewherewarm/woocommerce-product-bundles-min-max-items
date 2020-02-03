@@ -18,12 +18,11 @@ Free mini-extension for WooCommerce Product Bundles that allows you to control t
 
 Want to use WooCommerce to sell personalized cases of wine? Boxes of cupcakes? T-shirts by the dozen?
 
-This plugin adds [pick-and-mix functionality](https://docs.woocommerce.com/document/bundles/bundles-use-case-pick-and-mix/) to the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension. Use it to control the minimum or maximum quantity of products that customers must choose in order to purchase a [Product Bundle](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457).
+This plugin adds [pick-and-mix functionality](https://docs.woocommerce.com/document/bundles/bundles-use-case-pick-and-mix/) to the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension.
 
+Use it to control the minimum or maximum quantity of products that customers must choose in order to purchase a Product Bundle.
 
-== Installation ==
-
-This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension. Before installing this plugin, please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
+**Important**: This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension. Before installing this plugin, please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
 
 
 == Documentation ==
@@ -36,6 +35,11 @@ This plugin adds two new options under **Product Data > Bundled Products**:
 Once you have used these options to set a minimum or maximum quantity limit, customers must choose a quantity of products within the specified range to make a purchase.
 
 Want to contribute? Please submit your issue reports and pull requests on [GitHub](https://github.com/somewherewarm/woocommerce-product-bundles-min-max-items).
+
+
+== Installation ==
+
+This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension. Before installing this plugin, please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
 
 
 == Screenshots ==
