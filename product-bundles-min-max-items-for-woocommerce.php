@@ -129,7 +129,7 @@ class WC_PB_Min_Max_Items {
 	 * PB version check notice.
 	 */
 	public static function pb_admin_notice() {
-	    echo '<div class="error"><p>' . sprintf( __( '<strong>Product Bundles &ndash; Min/Max Items</strong> requires <a href="%1$s">WooCommerce Product Bundles</a> version <strong>%2$s</strong> or higher.', 'woocommerce-product-bundles-min-max-items' ), self::$pb_url, self::$req_pb_version ) . '</p></div>';
+	    echo '<div class="error"><p>' . sprintf( __( '<strong>Product Bundles &ndash; Min/Max Items</strong> requires <a href="%1$s" target="_blank">WooCommerce Product Bundles</a> version <strong>%2$s</strong> or higher.', 'woocommerce-product-bundles-min-max-items' ), self::$pb_url, self::$req_pb_version ) . '</p></div>';
 	}
 
 	/**
