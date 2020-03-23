@@ -50,9 +50,6 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 == Changelog ==
 
-= 1.4.1 =
-* Important - Declared support for WooCommerce 4.0.
-
 = 1.4.0 =
 * Important - Renamed plugin to comply with WordPress.org guidelines.
 
@@ -119,5 +116,5 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 == Upgrade Notice ==
 
-= 1.4.1 =
-Declared support for WooCommerce 4.0.
+= 1.4.0 =
+Renamed plugin to comply with WordPress.org guidelines.

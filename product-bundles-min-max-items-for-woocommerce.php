@@ -34,7 +34,7 @@ class WC_PB_Min_Max_Items {
 	 *
 	 * @var string
 	 */
-	public static $version = '1.4.0';
+	public static $version = '1.4.1';
 
 	/**
 	 * Min required PB version.
