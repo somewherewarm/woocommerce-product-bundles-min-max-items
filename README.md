@@ -2,11 +2,11 @@
 
 ### What's This?
 
-Free mini-extension for [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5699243) that allows you to control the minimum or maximum quantity of bundled products that customers must choose in order to purchase a Product Bundle.
+Free mini-extension for [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/) that allows you to control the minimum or maximum quantity of bundled products that customers must choose in order to purchase a Product Bundle.
 
 ### How It Works
 
-Out of the box, [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5699243) does not include any options for selling fixed- or variable-size bundles, such as cases of wine, six-packs of soap, or candy boxes.
+Out of the box, [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/) does not include any options for selling fixed- or variable-size bundles, such as cases of wine, six-packs of soap, or candy boxes.
 
 The plugin adds two new options under **Product Data > Bundled Products**:
 

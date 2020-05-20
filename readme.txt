@@ -5,9 +5,9 @@ Tags: woocommerce, product, bundles, bundled, quantity, min, max, item, items, c
 Requires at least: 4.4
 Tested up to: 5.3
 Requires PHP: 5.6
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 WC requires at least: 3.1
-WC tested up to: 4.0
+WC tested up to: 4.2
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,11 +18,11 @@ Free mini-extension for WooCommerce Product Bundles that allows you to control t
 
 Want to use WooCommerce to sell personalized cases of wine? Boxes of cupcakes? T-shirts by the dozen?
 
-This plugin adds [pick-and-mix functionality](https://docs.woocommerce.com/document/bundles/bundles-use-case-pick-and-mix/) to the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension.
+This plugin adds [pick-and-mix functionality](https://docs.woocommerce.com/document/bundles/bundles-use-case-pick-and-mix/) to the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/) extension.
 
 Use it to control the minimum or maximum quantity of products that customers must choose in order to purchase a Product Bundle.
 
-**Important**: This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension. Before installing this plugin, please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
+**Important**: This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/) extension. Before installing this plugin, please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
 
 
 == Documentation ==
@@ -39,7 +39,7 @@ Want to contribute? Please submit your issue reports and pull requests on [GitHu
 
 == Installation ==
 
-This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension. Before installing this plugin, please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
+This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/) extension. Before installing this plugin, please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
 
 
 == Screenshots ==
@@ -49,6 +49,9 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 
 == Changelog ==
+
+= 1.4.2 =
+* Tweak - Declared support for WooCommerce 4.2.
 
 = 1.4.0 =
 * Important - Renamed plugin to comply with WordPress.org guidelines.
@@ -116,5 +119,5 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 == Upgrade Notice ==
 
-= 1.4.0 =
-Renamed plugin to comply with WordPress.org guidelines.
+= 1.4.2 =
+Declared support for WooCommerce 4.2.
