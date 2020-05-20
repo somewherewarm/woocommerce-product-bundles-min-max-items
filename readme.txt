@@ -3,7 +3,7 @@
 Contributors: franticpsyx, SomewhereWarm
 Tags: woocommerce, product, bundles, bundled, quantity, min, max, item, items, count, restrict, limit
 Requires at least: 4.4
-Tested up to: 5.3
+Tested up to: 5.4
 Requires PHP: 5.6
 Stable tag: 1.4.2
 WC requires at least: 3.1
