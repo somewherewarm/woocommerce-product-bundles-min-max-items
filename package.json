@@ -6,7 +6,7 @@
 		"url": "https://github.com/somewherewarm/woocommerce-product-bundles-min-max-items.git"
 	},
 	"license": "GPL-3.0+",
-	"version": "1.4.2",
+	"version": "1.4.3",
 	"homepage": "https://woocommerce.com/products/product-bundles/",
 	"main": "Gruntfile.js",
 	"devDependencies": {

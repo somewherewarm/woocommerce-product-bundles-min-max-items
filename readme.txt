@@ -3,11 +3,11 @@
 Contributors: franticpsyx, SomewhereWarm
 Tags: woocommerce, product, bundles, bundled, quantity, min, max, item, items, count, restrict, limit
 Requires at least: 4.4
-Tested up to: 5.4
+Tested up to: 5.5
 Requires PHP: 5.6
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 WC requires at least: 3.1
-WC tested up to: 4.2
+WC tested up to: 4.5
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -49,6 +49,9 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 
 == Changelog ==
+
+= 1.4.3 =
+* Tweak - Declared support for WooCommerce 4.5 and WordPress 5.5.
 
 = 1.4.2 =
 * Tweak - Declared support for WooCommerce 4.2.
@@ -119,5 +122,5 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 == Upgrade Notice ==
 
-= 1.4.2 =
-Declared support for WooCommerce 4.2.
+= 1.4.3 =
+Declared support for WooCommerce 4.5 and WordPress 5.5.

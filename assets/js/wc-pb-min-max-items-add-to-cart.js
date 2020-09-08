@@ -4,8 +4,8 @@
 
 	function init_script( bundle ) {
 
-		var min = bundle.$bundle_form.find( '.min_max_items' ).data( 'min' );
-		var max = bundle.$bundle_form.find( '.min_max_items' ).data( 'max' );
+		var min = bundle.$bundle_form.find( '.min_max_items' ).data( 'min' ),
+		    max = bundle.$bundle_form.find( '.min_max_items' ).data( 'max' );
 
 		if ( typeof( min ) !== 'undefined' && typeof( max ) !== 'undefined' ) {
 
@@ -20,10 +20,10 @@
 
 					bundle.$bundle_data.on( 'woocommerce-product-bundle-validate', function( event, bundle ) {
 
-						var total_qty         = 0;
-						var qty_error_status  = '';
-						var qty_error_prompt  = '';
-						var passed_validation = true;
+						var total_qty         = 0,
+						    qty_error_status  = '',
+						    qty_error_prompt  = '',
+						    passed_validation = true;
 
 						// Count items.
 						$.each( bundle.bundled_items, function( index, bundled_item ) {
@@ -109,7 +109,11 @@
 
 							qty_error_status = qty_error_status.replace( '%s', total_qty );
 
-							bundle.add_validation_message( qty_error_prompt.replace( '%s', wc_pb_min_max_items_params.i18n_qty_error_status_format.replace( '%s', qty_error_status ) ) );
+							if ( bundle.validation_messages.length > 0 ) {
+								bundle.add_validation_message( qty_error_prompt.replace( '%s', '' ) );
+							} else {
+								bundle.add_validation_message( qty_error_prompt.replace( '%s', wc_pb_min_max_items_params.i18n_qty_error_status_format.replace( '%s', qty_error_status ) ) );
+							}
 						}
 
 					} );
