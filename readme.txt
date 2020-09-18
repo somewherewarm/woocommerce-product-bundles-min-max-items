@@ -23,12 +23,14 @@ Free mini-extension for WooCommerce Product Bundles that allows you to control t
 
 == Documentation ==
 
-This plugin adds two new options under **Product Data > Bundled Products**:
+Up until version 6.4.0, [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/) did not include any options for selling fixed- or variable-size bundles, such as cases of wine, six-packs of soap, or candy boxes.
+
+This feature plugin adds two new options under **Product Data > Bundled Products**:
 
 * **Items required (≥)**; and
 * **Items allowed (≤)**.
 
-Once you have used these options to set a minimum or maximum quantity limit, customers must choose a quantity of products within the specified range to make a purchase.
+Use these to set a minimum or maximum quantity of bundled items that customers must choose to make a purchase.
 
 
 == Installation ==
