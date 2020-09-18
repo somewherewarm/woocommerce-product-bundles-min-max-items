@@ -2,7 +2,7 @@
 
 ### Important
 
-**Product Bundles - Min/Max Items** has been rolled into Product Bundles. If you are running Product Bundles version 6.4.0 or newer, you do not need this feature plugin.
+**Product Bundles - Min/Max Items** has been rolled into Product Bundles. If you are running Product Bundles 6.4.0 or newer, you don't need this plugin!
 
 ### What's This?
 
