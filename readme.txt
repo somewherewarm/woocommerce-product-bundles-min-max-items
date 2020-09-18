@@ -16,13 +16,9 @@ Free mini-extension for WooCommerce Product Bundles that allows you to control t
 
 == Description ==
 
-Want to use WooCommerce to sell personalized cases of wine? Boxes of cupcakes? T-shirts by the dozen?
+**Product Bundles - Min/Max Items** has been rolled into [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/). If you have updated to Product Bundles version 6.4.0 or newer, you don't need this plugin!
 
-This plugin adds [pick-and-mix functionality](https://docs.woocommerce.com/document/bundles/bundles-use-case-pick-and-mix/) to the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/) extension.
-
-Use it to control the minimum or maximum quantity of products that customers must choose in order to purchase a Product Bundle.
-
-**Important**: This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/) extension. Before installing this plugin, please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
+**Important**: This plugin is a free add-on for the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/) extension. It was created to validate and refine a feature that is now included with Product Bundles.
 
 
 == Documentation ==
@@ -34,12 +30,10 @@ This plugin adds two new options under **Product Data > Bundled Products**:
 
 Once you have used these options to set a minimum or maximum quantity limit, customers must choose a quantity of products within the specified range to make a purchase.
 
-Want to contribute? Please submit your issue reports and pull requests on [GitHub](https://github.com/somewherewarm/woocommerce-product-bundles-min-max-items).
-
 
 == Installation ==
 
-This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/) extension. Before installing this plugin, please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
+This plugin works requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/) extension to work. Please do not install this if you are using Product Bundles version 6.4.0+.
 
 
 == Screenshots ==
